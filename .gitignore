@@ -1,0 +1,6 @@
+# ...existing code...
+.archive/
+node_modules/
+*.lnk
+all-files.txt
+repo-changes.patch
