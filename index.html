@@ -3,42 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One Page App</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Warsztat+ | Transparentna obsługa napraw</title>
+    <link rel="stylesheet" href="css/base/core.css">
+    <link rel="stylesheet" href="css/landing/page.css">
 </head>
-<body>
-    <header>
-        <h1>Witamy w naszej aplikacji!</h1>
-        <nav>
-            <ul>
-                <li><a href="#section1">Sekcja 1</a></li>
-                <li><a href="#section2">Sekcja 2</a></li>
-                <li><a href="#section3">Sekcja 3</a></li>
-            </ul>
+<body class="site-body">
+    <header class="site-header" id="top">
+        <div class="site-header__brand">
+            <a class="site-header__logo" href="#top">Warsztat<span class="site-header__logo--accent">+</span></a>
+            <p class="site-header__tagline">System do raportowania napraw i obsługi klientów</p>
+        </div>
+        <nav class="site-nav" aria-label="Główna nawigacja">
+            <a class="site-nav__link" href="#vin">Historia VIN</a>
+            <a class="site-nav__link" href="#features">Funkcje</a>
+            <a class="site-nav__link" href="#workflow">Jak to działa</a>
+            <a class="site-nav__cta" href="#vin">Sprawdź VIN</a>
         </nav>
     </header>
 
     <main>
-        <section id="section1">
-            <h2>Sekcja 1</h2>
-            <p>Treść sekcji 1.</p>
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero__content">
+                <p class="hero__eyebrow">Platforma dla warsztatów</p>
+                <h1 id="hero-title">Usprawniamy serwis, zwiększamy zaufanie klientów</h1>
+                <p class="hero__lead">Rejestruj naprawy, dziel się historią VIN i zarządzaj zespołem z jednego miejsca. Jasne raporty, klarowne statusy i szybkie odpowiedzi dla właścicieli pojazdów.</p>
+                <div class="hero__actions">
+                    <a class="btn btn--primary" href="#vin">Sprawdź historię VIN</a>
+                    <a class="btn btn--ghost" href="#features">Poznaj korzyści</a>
+                </div>
+            </div>
+            <div class="hero__stats" aria-label="Kluczowe wskaźniki">
+                <div>
+                    <strong>15 min</strong>
+                    <span>średni czas dodania raportu</span>
+                </div>
+                <div>
+                    <strong>3×</strong>
+                    <span>mniej telefonów o status</span>
+                </div>
+                <div>
+                    <strong>100%</strong>
+                    <span>transparentności historii napraw</span>
+                </div>
+            </div>
         </section>
 
-        <section id="section2">
-            <h2>Sekcja 2</h2>
-            <p>Treść sekcji 2.</p>
+        <section id="vin" class="section section--highlight" aria-labelledby="vin-title">
+            <div class="section__header">
+                <p class="section__eyebrow">Właściciele pojazdów</p>
+                <h2 id="vin-title">Sprawdź historię napraw po numerze VIN</h2>
+                <p>Wpisz 17-znakowy numer VIN swojego pojazdu. Wkrótce pokażemy Ci status każdej naprawy, raporty i komentarze warsztatu.</p>
+            </div>
+            <form id="vin-form" class="vin-form" novalidate>
+                <label class="visually-hidden" for="vin-input">Numer VIN</label>
+                <input id="vin-input" name="vin" maxlength="17" minlength="11" autocomplete="off" placeholder="Wprowadź numer VIN" required>
+                <button class="btn btn--primary" type="submit">Wyszukaj</button>
+            </form>
+            <div id="vin-result" class="vin-result" aria-live="polite"></div>
         </section>
 
-        <section id="section3">
-            <h2>Sekcja 3</h2>
-            <p>Treść sekcji 3.</p>
+        <section id="features" class="section" aria-labelledby="features-title">
+            <div class="section__header">
+                <p class="section__eyebrow">Dla zespołów serwisowych</p>
+                <h2 id="features-title">Profesjonalne narzędzia dla warsztatu</h2>
+                <p>Łączymy raportowanie, komunikację z klientem i rozliczenia w jednej przemyślanej platformie.</p>
+            </div>
+            <div class="card-grid">
+                <article class="card">
+                    <h3>Raportowanie napraw</h3>
+                    <p>Szybko dokumentuj przebieg napraw, statusy i kosztorysy. Każda zmiana trwa kilkadziesiąt sekund.</p>
+                </article>
+                <article class="card">
+                    <h3>Transparentny VIN</h3>
+                    <p>Klient z numerem VIN otrzymuje kompletną historię, więc działasz w pełni przejrzyście i ograniczasz telefony.</p>
+                </article>
+                <article class="card">
+                    <h3>Kontrola jakości</h3>
+                    <p>Administrator ma podgląd do logów pracy zespołu i może nadawać uprawnienia warsztatom.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="workflow" class="section section--alt" aria-labelledby="workflow-title">
+            <div class="section__header">
+                <p class="section__eyebrow">Jak działamy</p>
+                <h2 id="workflow-title">Proces wdrożenia w trzech krokach</h2>
+            </div>
+            <ol class="steps">
+                <li>
+                    <h3>1. Aktywacja konta</h3>
+                    <p>Administrator tworzy warsztat na podstawie adresu e-mail oraz danych działalności.</p>
+                </li>
+                <li>
+                    <h3>2. Raportowanie</h3>
+                    <p>Warsztat loguje się mailem i dodaje raporty napraw, aktualizując statusy w czasie rzeczywistym.</p>
+                </li>
+                <li>
+                    <h3>3. Dostęp klienta</h3>
+                    <p>Klient wpisuje VIN i widzi historię napraw, kosztorysy i dodatkowe komentarze.</p>
+                </li>
+            </ol>
         </section>
     </main>
 
-    <footer>
-        <p>&copy; 2023 One Page App. Wszelkie prawa zastrzeżone.</p>
+    <footer class="site-footer">
+        <p>&copy; 2025 Warsztat+. Wszystkie prawa zastrzeżone.</p>
+        <a class="ghost-link" href="login.html" aria-label="Przejdź do panelu logowania">Informacje serwisowe</a>
     </footer>
 
-    <script src="js/main.js"></script>
+    <script src="js/shared/reports.js" defer></script>
+    <script src="js/landing/vinForm.js" defer></script>
 </body>
 </html>

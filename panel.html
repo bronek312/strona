@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warsztat+ | Panel administratora</title>
+    <link rel="stylesheet" href="css/base/core.css">
+    <link rel="stylesheet" href="css/panel/page.css">
+</head>
+<body class="panel-body">
+    <div class="panel-layout">
+        <aside class="panel-sidebar">
+            <div class="panel-sidebar__brand">Warsztat<span>+</span></div>
+            <nav class="panel-nav" aria-label="Nawigacja panelu">
+                <button class="panel-nav__link is-active" data-panel-target="overview">Przeglad</button>
+                <button class="panel-nav__link" data-panel-target="workshops">Warsztaty</button>
+                <button class="panel-nav__link" data-panel-target="reports">Raporty</button>
+                <button class="panel-nav__link" data-panel-target="settings">Ustawienia</button>
+                <button class="panel-nav__link" data-panel-target="logs">Logi</button>
+            </nav>
+        </aside>
+
+        <div class="panel-content">
+            <header class="panel-header">
+                <div class="panel-header__info">
+                    <span class="panel-header__subtitle" id="panel-role"></span>
+                    <h1 id="panel-username"></h1>
+                </div>
+                <button class="btn btn--ghost" id="logout-btn">Wyloguj</button>
+            </header>
+
+            <main class="panel-main">
+                <section class="panel-view is-active" data-panel="overview">
+                    <div class="panel-section panel-section--summary">
+                        <header class="panel-section__header">
+                            <div>
+                                <p class="panel-section__eyebrow">Stan systemu</p>
+                                <h2>Podsumowanie</h2>
+                            </div>
+                            <p class="panel-section__hint">Dane aktualizuja sie wraz z dzialaniami administratora.</p>
+                        </header>
+                        <div class="panel-grid panel-grid--summary" id="overview-metrics"></div>
+                    </div>
+                    <div class="panel-grid panel-grid--overview-cards">
+                        <div class="panel-card panel-card--logs">
+                            <h2>Ostatnie logi</h2>
+                            <ul class="panel-log" id="overview-logs"></ul>
+                        </div>
+                        <div class="panel-card panel-card--surface panel-card--audit">
+                            <h2>Ostatnie akcje administratorow</h2>
+                            <ul class="panel-log panel-log--audit" id="admin-actions"></ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-view" data-panel="workshops">
+                    <div class="panel-section panel-section--split">
+                        <div class="panel-split">
+                            <div class="panel-split__primary panel-card panel-card--surface">
+                                <div class="panel-toolbar">
+                                    <div>
+                                        <p class="panel-section__eyebrow">Baza warsztatow</p>
+                                        <h2>Warsztaty</h2>
+                                    </div>
+                                    <p class="panel-section__hint">Filtruj aktywne, wygasle lub dezaktywowane konta.</p>
+                                </div>
+                                <form id="workshop-filter-form" class="panel-filters panel-filters--inline" novalidate>
+                                    <label>
+                                        Szukaj po nazwie lub e-mailu
+                                        <input type="search" name="query" placeholder="np. Auto Serwis">
+                                    </label>
+                                    <label>
+                                        Status licencji
+                                        <select name="status">
+                                            <option value="all">Wszystkie</option>
+                                            <option value="active">Aktywna licencja</option>
+                                            <option value="expired">Licencja wygasla</option>
+                                            <option value="inactive">Dezaktywowane</option>
+                                        </select>
+                                    </label>
+                                    <div class="panel-filters__actions">
+                                        <button class="btn btn--ghost" type="submit">Filtruj</button>
+                                    </div>
+                                </form>
+                                <div class="panel-list" id="workshop-list"></div>
+                            </div>
+                            <aside class="panel-split__aside">
+                                <div class="panel-card panel-card--aside">
+                                    <p class="panel-section__eyebrow">Nowe konto</p>
+                                    <h3>Dodaj warsztat</h3>
+                                    <form id="create-workshop-form" class="panel-form" novalidate>
+                                        <label>
+                                            Nazwa warsztatu
+                                            <input type="text" name="name" required>
+                                        </label>
+                                        <label>
+                                            Adres e-mail
+                                            <input type="email" name="email" required>
+                                        </label>
+                                        <label>
+                                            Numer NIP lub REGON
+                                            <input type="text" name="registration" required>
+                                        </label>
+                                        <label>
+                                            Miesieczna oplata (PLN)
+                                            <input type="number" name="billingAmount" min="0" step="0.01" required>
+                                        </label>
+                                        <label>
+                                            Haslo tymczasowe
+                                            <input type="password" name="password" required>
+                                        </label>
+                                        <div class="panel-form__actions">
+                                            <button class="btn btn--secondary" type="submit">Utworz konto</button>
+                                        </div>
+                                    </form>
+                                    <p class="panel-feedback" id="admin-feedback" aria-live="polite"></p>
+                                </div>
+                            </aside>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-view" data-panel="reports">
+                    <div class="panel-section panel-section--split">
+                        <div class="panel-split">
+                            <div class="panel-split__primary panel-card panel-card--surface">
+                                <div class="panel-toolbar">
+                                    <div>
+                                        <p class="panel-section__eyebrow">Historia napraw</p>
+                                        <h2>Raporty</h2>
+                                    </div>
+                                    <p class="panel-section__hint">Wybierz raport z listy, aby edytowac.</p>
+                                </div>
+                                <form id="report-filter-form" class="panel-filters panel-filters--inline" novalidate>
+                                    <label>
+                                        Szukaj po VIN
+                                        <input type="search" name="vin" placeholder="np. WAUZZZ...">
+                                    </label>
+                                    <label>
+                                        Numer rejestracyjny
+                                        <input type="search" name="registration" placeholder="np. WPR 1234">
+                                    </label>
+                                    <label>
+                                        Status weryfikacji
+                                        <select name="approval">
+                                            <option value="all">Wszystkie</option>
+                                            <option value="pending">Oczekujace</option>
+                                            <option value="approved">Zatwierdzone</option>
+                                            <option value="rejected">Odrzucone</option>
+                                        </select>
+                                    </label>
+                                    <div class="panel-filters__actions">
+                                        <button class="btn btn--ghost" type="submit">Filtruj</button>
+                                    </div>
+                                </form>
+                                <div class="panel-list" id="report-list"></div>
+                            </div>
+                            <aside class="panel-split__aside">
+                                <div class="panel-card panel-card--aside">
+                                    <p class="panel-section__eyebrow">Panel edycji</p>
+                                    <h3>Edycja raportu</h3>
+                                    <form id="report-edit-form" class="panel-form" novalidate>
+                                        <input type="hidden" name="reportId">
+                                        <label>
+                                            Numer VIN
+                                            <input type="text" name="vin" required>
+                                        </label>
+                                        <label>
+                                            Numer rejestracyjny
+                                            <input type="text" name="registrationNumber" placeholder="np. WPR 1234">
+                                        </label>
+                                            <div class="panel-form__meta panel-form__meta--two">
+                                                <label>
+                                                    Przebieg (km)
+                                                <input type="number" name="mileageKm" min="0" step="1">
+                                                </label>
+                                                <label>
+                                                    Data pierwszej rejestracji
+                                                <input type="date" name="firstRegistrationDate">
+                                                </label>
+                                            </div>
+                                        <label>
+                                            Status weryfikacji
+                                            <select name="approvalStatus" id="report-approval-select">
+                                                <option value="pending">Oczekuje na akceptacje</option>
+                                                <option value="approved">Zatwierdzony</option>
+                                                <option value="rejected">Odrzucony</option>
+                                            </select>
+                                        </label>
+                                        <label>
+                                            Opis
+                                            <textarea name="summary" rows="4" placeholder="Opis naprawy"></textarea>
+                                        </label>
+                                            <div class="panel-media-section">
+                                                <p class="panel-media-section__title">Zalaczone pliki</p>
+                                                <div id="report-media-gallery" class="panel-media-gallery panel-media-gallery--readonly">
+                                                    <p class="panel-empty">Brak zalacznikow.</p>
+                                                </div>
+                                            </div>
+                                        <label>
+                                            Notatka dla warsztatu
+                                            <textarea name="moderationNote" rows="2" placeholder="Powod odrzucenia lub uwagi dodatkowe"></textarea>
+                                        </label>
+                                        <div class="panel-form__actions">
+                                            <button class="btn btn--secondary" type="submit">Zapisz zmiany</button>
+                                        </div>
+                                    </form>
+                                    <p class="panel-feedback" id="report-feedback" aria-live="polite"></p>
+                                </div>
+                            </aside>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-view" data-panel="settings">
+                    <div class="panel-section panel-section--narrow">
+                        <div class="panel-card panel-card--form">
+                            <header class="panel-section__header">
+                                <div>
+                                    <p class="panel-section__eyebrow">Konfiguracja</p>
+                                    <h2>Ustawienia systemowe</h2>
+                                </div>
+                                <p class="panel-section__hint">Dotyczy nowych licencji oraz statusow w raportach.</p>
+                            </header>
+                            <form id="settings-form" class="panel-form panel-form--grid" novalidate>
+                                <label>
+                                    Dlugosc licencji (miesiace)
+                                    <input type="number" name="licenseMonths" min="1" required>
+                                </label>
+                                <label>
+                                    Statusy napraw (oddzielone przecinkiem)
+                                    <textarea name="statusOptions" rows="3" placeholder="Przyjeta, W trakcie, Zakonczona"></textarea>
+                                </label>
+                                <div class="panel-form__actions panel-form__actions--end">
+                                    <button class="btn btn--secondary" type="submit">Zapisz ustawienia</button>
+                                </div>
+                            </form>
+                            <p class="panel-feedback" id="settings-feedback" aria-live="polite"></p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-view" data-panel="logs">
+                    <div class="panel-card">
+                        <h2>Dziennik zdarzen</h2>
+                        <div class="panel-log panel-log--tall" id="logs-full"></div>
+                        <button class="btn btn--ghost" id="logs-clear-btn" type="button">Wyczysc logi</button>
+                    </div>
+                </section>
+                    <section class="panel-view panel-view--workshop" data-panel="workshop-home">
+                        <div class="panel-section panel-section--summary">
+                            <header class="panel-section__header">
+                                <div>
+                                    <p class="panel-section__eyebrow">Profil warsztatu</p>
+                                    <h2>Twoje konto</h2>
+                                </div>
+                                <p class="panel-section__hint">Podsumowanie licencji i podstawowych danych kontaktowych.</p>
+                            </header>
+                            <div class="panel-card panel-card--surface panel-card--workshop">
+                                <div id="workshop-details" class="workshop-summary"></div>
+                            </div>
+                        </div>
+                        <div class="panel-card panel-card--surface">
+                            <h2>Twoje raporty</h2>
+                            <div class="panel-list" id="workshop-report-list"></div>
+                        </div>
+                        <div class="panel-card panel-card--surface">
+                            <p class="panel-section__eyebrow">Nowy raport</p>
+                            <h2>Dodaj raport serwisowy</h2>
+                            <p class="panel-section__hint">Po wyslaniu raport trafi do administratora i oczekuje na akceptacje.</p>
+                            <form id="workshop-report-form" class="panel-form" novalidate>
+                                <label>
+                                    Numer VIN
+                                    <input type="text" name="vin" required>
+                                </label>
+                                <label>
+                                    Numer rejestracyjny
+                                    <input type="text" name="registrationNumber" required>
+                                </label>
+                                <label>
+                                    Przebieg pojazdu (km)
+                                    <input type="number" name="mileageKm" min="0" step="1" required>
+                                </label>
+                                <label>
+                                    Data pierwszej rejestracji
+                                    <input type="date" name="firstRegistrationDate" required>
+                                </label>
+                                <label>
+                                    Opis naprawy
+                                    <textarea name="summary" rows="3" placeholder="Opis wykonanych prac"></textarea>
+                                </label>
+                                <label class="panel-upload">
+                                    Zalacz zdjecia lub filmy
+                                    <input type="file" name="mediaFiles" accept="image/*,video/*" multiple>
+                                    <small>Maks. 5 plikow, po 5 MB kazdy.</small>
+                                </label>
+                                <ul class="panel-upload__list" id="workshop-media-preview"></ul>
+                                <div class="panel-form__actions">
+                                    <button class="btn btn--secondary" type="submit">Dodaj raport</button>
+                                </div>
+                            </form>
+                            <p class="panel-feedback" id="workshop-report-feedback" aria-live="polite"></p>
+                        </div>
+                    </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="js/shared/settings.js"></script>
+    <script src="js/shared/logs.js"></script>
+    <script src="js/shared/reports.js"></script>
+    <script src="js/shared/workshops.js"></script>
+    <script src="js/shared/session.js"></script>
+    <script src="js/panel/dashboard.js"></script>
+</body>
+</html>

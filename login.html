@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warsztat+ | Logowanie</title>
+    <link rel="stylesheet" href="css/base/core.css">
+    <link rel="stylesheet" href="css/auth/page.css">
+</head>
+<body class="auth-body">
+    <main class="auth" aria-labelledby="auth-title">
+        <a class="ghost-link auth__home-link" href="index.html#top">&#8592; Strona glowna</a>
+        <header class="auth__intro">
+            <p class="auth__eyebrow">Strefa zabezpieczona</p>
+            <h1 id="auth-title">Zaloguj sie do Warsztat+</h1>
+            <p>Wpisz login administratora (<code>test</code>) lub adres e-mail warsztatu oraz swoje haslo. Po poprawnym logowaniu przekierujemy Cie do panelu.</p>
+        </header>
+
+        <form id="unified-login-form" class="auth-form" novalidate>
+            <label>
+                Login lub e-mail
+                <input type="text" name="identifier" autocomplete="username" required>
+            </label>
+            <label>
+                Haslo
+                <input type="password" name="password" autocomplete="current-password" required>
+            </label>
+            <button class="btn btn--primary" type="submit">Zaloguj</button>
+        </form>
+        <p class="auth-card__feedback" data-feedback="login" aria-live="polite"></p>
+    </main>
+
+    <script src="js/shared/workshops.js"></script>
+    <script src="js/shared/session.js"></script>
+    <script src="js/auth/login.js"></script>
+</body>
+</html>

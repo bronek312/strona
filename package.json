@@ -1,0 +1,26 @@
+{
+  "name": "czysta-strona",
+  "version": "1.0.0",
+  "description": "This project is a simple one-page application that serves as a template for creating a single-page website. It includes basic sections such as a header, content area, and footer.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run serve",
+    "serve": "lite-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bronek312/warsztat.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/bronek312/warsztat/issues"
+  },
+  "homepage": "https://github.com/bronek312/warsztat#readme",
+  "devDependencies": {
+    "lite-server": "^2.6.1"
+  }
+}

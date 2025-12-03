@@ -1,29 +1,42 @@
-# One Page App
+# Warsztat+
 
-This project is a simple one-page application that serves as a template for creating a single-page website. It includes basic sections such as a header, content area, and footer.
+Landing page oraz panel logowania dla platformy wspierajacej warsztaty samochodowe. Celem aplikacji jest przyspieszenie raportowania napraw i udostepnienie historii VIN klientom.
 
-## Project Structure
+## Struktura
 
 ```
-one-page-app
-├── index.html       # Main HTML file for the one-page layout
+warsztat
+├── index.html             # Landing z formularzem VIN
+├── login.html             # Jednolity formularz logowania
+├── panel.html             # Docelowy panel admina/warsztatu
 ├── css
-│   └── styles.css   # CSS file for styling the page
+│   ├── base/core.css      # Zasady wspolne
+│   ├── landing/page.css   # Styl strony glownej
+│   ├── auth/page.css      # Styl logowania
+│   └── panel/page.css     # Styl panelu
 ├── js
-│   └── main.js      # JavaScript file for interactivity
-├── .gitignore       # Git ignore file
-└── README.md        # Project documentation
+│   ├── shared/reports.js  # Zarzadzanie raportami VIN
+│   ├── shared/workshops.js# Zarzadzanie kontami warsztatow
+│   ├── shared/session.js  # Sesja i role
+│   ├── landing/vinForm.js # Logika formularza VIN
+│   ├── auth/login.js      # Logowanie i przekierowanie
+│   └── panel/dashboard.js # Panel po zalogowaniu
+├── package.json
+└── README.md
 ```
 
-## Getting Started
+## Uruchomienie
 
-To get started with this project, follow these steps:
+1. `npm install`
+2. `npm start` (lite-server pod `http://localhost:3000`)
+3. `index.html` to landing, `login.html` to formularz logowania (link w stopce), `panel.html` wczytuje sie po udanym logowaniu
 
-1. Clone the repository to your local machine.
-2. Open the `index.html` file in your web browser to view the one-page application.
-3. Modify the `css/styles.css` file to change the appearance of the page.
-4. Add any necessary JavaScript functionality in the `js/main.js` file.
+## Logowanie testowe
 
-## License
+- Administrator: login `test`, haslo `test`
+- Po zalogowaniu administrator trafia do `panel.html`, gdzie zaklada konta warsztatow (nazwa, e-mail, dane firmy, haslo tymczasowe). Dane przechowywane sa lokalnie w `localStorage`.
+- Warsztat loguje sie swoim e-mailem oraz haslem. Po sukcesie widzi sekcje warsztatowa w `panel.html`.
 
-This project is open-source and available under the MIT License.
+## Formularz VIN
+
+Na stronie glownej znajduje sie formularz sprawdzania historii VIN. Na potrzeby demo zapisywane sa dwa przykladowe raporty w `localStorage`. Docelowy modul raportowania zostanie podlaczony w kolejnych iteracjach.

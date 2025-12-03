@@ -1,0 +1,94 @@
+:root {
+    --color-primary: #0b3d60;
+    --color-primary-dark: #06253a;
+    --color-secondary: #1c7ed6;
+    --color-bg: #f4f6f8;
+    --color-card: #ffffff;
+    --color-text: #1f2a37;
+    --color-muted: #6b7785;
+    --radius: 14px;
+    --shadow-soft: 0 15px 35px rgba(15, 23, 42, 0.12);
+    font-size: 16px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+}
+
+a {
+    color: inherit;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.btn {
+    border: none;
+    border-radius: 999px;
+    padding: 0.85rem 1.7rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn--primary {
+    background: var(--color-primary);
+    color: #ffffff;
+    box-shadow: var(--shadow-soft);
+}
+
+.btn--secondary {
+    background: var(--color-secondary);
+    color: #ffffff;
+}
+
+.btn--ghost {
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    background: transparent;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.ghost-link {
+    color: #90a4b7;
+    text-decoration: none;
+    font-size: 0.85rem;
+    opacity: 0.65;
+}
+
+.ghost-link:focus,
+.ghost-link:hover {
+    opacity: 1;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.is-hidden {
+    display: none !important;
+}
