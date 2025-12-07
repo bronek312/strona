@@ -54,68 +54,178 @@
                 </section>
 
                 <section class="panel-view" data-panel="workshops">
-                    <div class="panel-section panel-section--split">
-                        <div class="panel-split">
-                            <div class="panel-split__primary panel-card panel-card--surface">
-                                <div class="panel-toolbar">
-                                    <div>
-                                        <p class="panel-section__eyebrow">Baza warsztatow</p>
-                                        <h2>Warsztaty</h2>
-                                    </div>
-                                    <p class="panel-section__hint">Filtruj aktywne, wygasle lub dezaktywowane konta.</p>
+                    <div class="panel-section">
+                        <div class="panel-card panel-card--surface panel-card--workshops">
+                            <div class="panel-toolbar panel-toolbar--split" id="workshop-toolbar-list">
+                                <div>
+                                    <p class="panel-section__eyebrow">Baza warsztatow</p>
+                                    <h2>Warsztaty</h2>
                                 </div>
-                                <form id="workshop-filter-form" class="panel-filters panel-filters--inline" novalidate>
+                                <div class="panel-toolbar__actions">
+                                    <button class="btn btn--secondary" type="button" id="workshop-add-btn">Dodaj warsztat</button>
+                                </div>
+                            </div>
+                            <!-- Usunięto dolny przycisk Powrot do listy, zostaje tylko górny -->
+                            <div class="workshop-browser" id="workshop-browser-list">
+                                <form id="workshop-filter-form" class="panel-filters panel-filters--inline panel-filters--surface" novalidate>
                                     <label>
                                         Szukaj po nazwie lub e-mailu
-                                        <input type="search" name="query" placeholder="np. Auto Serwis">
+                                        <input type="search" name="query" placeholder="np. Warsztat+ Centralny">
                                     </label>
                                     <label>
-                                        Status licencji
+                                        Status
                                         <select name="status">
                                             <option value="all">Wszystkie</option>
-                                            <option value="active">Aktywna licencja</option>
-                                            <option value="expired">Licencja wygasla</option>
-                                            <option value="inactive">Dezaktywowane</option>
+                                            <option value="active">Aktywne</option>
+                                            <option value="inactive">Nieaktywne</option>
+                                            <option value="notice">W okresie wypowiedzenia</option>
+                                            <option value="deactivated">Dezaktywowane</option>
                                         </select>
                                     </label>
                                     <div class="panel-filters__actions">
-                                        <button class="btn btn--ghost" type="submit">Filtruj</button>
+                                        <button class="btn btn--ghost" type="button" id="workshop-filter-reset">Wyczysc</button>
+                                        <button class="btn btn--secondary" type="submit">Filtruj</button>
                                     </div>
                                 </form>
-                                <div class="panel-list" id="workshop-list"></div>
+                                <div class="panel-list panel-list--grid" id="workshop-list"></div>
                             </div>
-                            <aside class="panel-split__aside">
-                                <div class="panel-card panel-card--aside">
-                                    <p class="panel-section__eyebrow">Nowe konto</p>
-                                    <h3>Dodaj warsztat</h3>
-                                    <form id="create-workshop-form" class="panel-form" novalidate>
-                                        <label>
-                                            Nazwa warsztatu
-                                            <input type="text" name="name" required>
-                                        </label>
-                                        <label>
-                                            Adres e-mail
-                                            <input type="email" name="email" required>
-                                        </label>
-                                        <label>
-                                            Numer NIP lub REGON
-                                            <input type="text" name="registration" required>
-                                        </label>
-                                        <label>
-                                            Miesieczna oplata (PLN)
-                                            <input type="number" name="billingAmount" min="0" step="0.01" required>
-                                        </label>
-                                        <label>
-                                            Haslo tymczasowe
-                                            <input type="password" name="password" required>
-                                        </label>
-                                        <div class="panel-form__actions">
-                                            <button class="btn btn--secondary" type="submit">Utworz konto</button>
+
+                            <div class="workshop-browser workshop-browser--detail" id="workshop-browser-detail" hidden>
+                                <div class="workshop-detail-shell">
+                                    <div class="panel-back-btn-container panel-back-btn--absolute">
+                                        <button class="btn btn--ghost panel-back-btn" type="button" id="workshop-list-back">&larr; Powrót do listy</button>
+                                    </div>
+                                        <div class="workshop-detail-shell__toolbar">
+                                            <div>
+                                                <p class="panel-section__eyebrow" id="workshop-detail-eyebrow">Profil warsztatu</p>
+                                                <h3 id="workshop-detail-title">Szczegoly warsztatu</h3>
+                                            </div>
+                                            <button class="btn btn--danger" id="workshop-deactivate-btn">Dezaktywuj konto</button>
                                         </div>
-                                    </form>
-                                    <p class="panel-feedback" id="admin-feedback" aria-live="polite"></p>
+                                    <p class="panel-feedback" id="workshop-detail-feedback" aria-live="polite"></p>
+                                        <div class="workshop-detail-shell__layout">
+                                            <div class="workshop-tabs">
+                                                <!-- Usunięto pole specjalizacji -->
+                                                <nav class="workshop-tabs__nav" aria-label="Zakładki szczegółów warsztatu">
+                                                    <button class="workshop-tab active" data-tab="activity">Aktywność / Raporty</button>
+                                                    <button class="workshop-tab" data-tab="logs">Logi i notatki</button>
+                                                    <button class="workshop-tab" data-tab="reports">Raporty</button>
+                                                    <button class="workshop-tab" data-tab="contacts">Kontakt & osoby</button>
+                                                    <button class="workshop-tab" data-tab="settings">Ustawienia</button>
+                                                    <button class="workshop-tab" data-tab="tickets">Zgłoszenia / bilety</button>
+                                                </nav>
+                                                <div class="workshop-tabs__content">
+                                                    <section class="workshop-tab-content" id="tab-activity">
+                                                        <div id="workshop-detail-overview" class="workshop-detail"></div>
+                                                        <section class="workshop-detail__section">
+                                                            <header>
+                                                                <p class="panel-section__eyebrow">Abonament</p>
+                                                                <h4>Stan umowy</h4>
+                                                            </header>
+                                                            <div id="workshop-detail-subscription" class="workshop-detail__grid"></div>
+                                                        </section>
+                                                        <!-- Usunięto podsekcję Raporty warsztatu -->
+                                                    </section>
+                                                    <section class="workshop-tab-content" id="tab-logs" style="display:none">
+                                                        <header>
+                                                            <p class="panel-section__eyebrow">Logi i notatki</p>
+                                                            <h4>Ostatnie działania i notatnik</h4>
+                                                        </header>
+                                                        <ul id="workshop-detail-logs">(Tu pojawi się lista logów...)</ul>
+                                                        <textarea id="workshop-detail-notepad" class="workshop-notepad" placeholder="Notatki wewnętrzne (widoczne tylko dla adminów)"></textarea>
+                                                    </section>
+                                                    <section class="workshop-tab-content" id="tab-reports" style="display:none">
+                                                        <header>
+                                                            <p class="panel-section__eyebrow">Raporty</p>
+                                                            <h4>Wszystkie raporty warsztatu</h4>
+                                                        </header>
+                                                        <form id="workshop-reports-filter-form" class="panel-filters panel-filters--inline" novalidate>
+                                                            <label>
+                                                                Status
+                                                                <select name="status">
+                                                                    <option value="all">Wszystkie</option>
+                                                                    <option value="pending">Oczekujące</option>
+                                                                    <option value="approved">Zatwierdzone</option>
+                                                                    <option value="rejected">Odrzucone</option>
+                                                                </select>
+                                                            </label>
+                                                            <label>
+                                                                Data
+                                                                <input type="date" name="date">
+                                                            </label>
+                                                            <label>
+                                                                Typ naprawy
+                                                                <input type="text" name="type" placeholder="np. mechanika, elektronika">
+                                                            </label>
+                                                            <div class="panel-filters__actions">
+                                                                <button class="btn btn--secondary" type="submit">Filtruj</button>
+                                                            </div>
+                                                        </form>
+                                                        <div id="workshop-reports-list">(Tu pojawi się lista raportów...)</div>
+                                                    </section>
+                                                    <section class="workshop-tab-content" id="tab-contacts" style="display:none">
+                                                        <header>
+                                                            <p class="panel-section__eyebrow">Kontakt & osoby</p>
+                                                            <h4>Użytkownicy konta warsztatu</h4>
+                                                        </header>
+                                                        <div id="workshop-detail-contacts">(Tu pojawi się lista kontaktów...)</div>
+                                                    </section>
+                                                    <section class="workshop-tab-content" id="tab-settings" style="display:none">
+                                                        <header>
+                                                            <p class="panel-section__eyebrow">Ustawienia</p>
+                                                            <h4>Edycja danych warsztatu i integracje</h4>
+                                                        </header>
+                                                        <form id="workshop-settings-form" class="panel-form panel-form--stacked" novalidate>
+                                                            <label>Nazwa warsztatu
+                                                                <input type="text" name="name" required>
+                                                            </label>
+                                                            <label>Miasto
+                                                                <input type="text" name="city">
+                                                            </label>
+                                                            <label>Adres
+                                                                <input type="text" name="address">
+                                                            </label>
+                                                            <label>Telefon kontaktowy
+                                                                <input type="tel" name="phone">
+                                                            </label>
+                                                            <label>Adres e-mail
+                                                                <input type="email" name="email">
+                                                            </label>
+                                                            <label>E-mail do faktur
+                                                                <input type="email" name="billingEmail">
+                                                            </label>
+                                                            <label>Cena abonamentu (PLN)
+                                                                <input type="number" name="subscriptionAmount" min="0" step="0.01">
+                                                            </label>
+                                                            <label>Długość abonamentu (miesiące)
+                                                                <input type="number" name="subscriptionMonths" min="1">
+                                                            </label>
+                                                            <label>Data startu umowy
+                                                                <input type="date" name="subscriptionStartDate">
+                                                            </label>
+                                                            <fieldset>
+                                                                <legend>Opcje dodatkowe</legend>
+                                                                <label><input type="checkbox" name="integrationSms"> Integracja SMS</label>
+                                                                <label><input type="checkbox" name="integrationHurtownia"> Integracja z hurtownią</label>
+                                                                <label><input type="checkbox" name="integrationAutodoc"> Integracja z Autodoc</label>
+                                                            </fieldset>
+                                                            <div class="panel-form__actions panel-form__actions--end">
+                                                                <button class="btn btn--secondary" type="submit">Zapisz zmiany</button>
+                                                            </div>
+                                                        </form>
+                                                    </section>
+                                                    <section class="workshop-tab-content" id="tab-tickets" style="display:none">
+                                                        <header>
+                                                            <p class="panel-section__eyebrow">Zgłoszenia / bilety</p>
+                                                            <h4>Obsługa zgłoszeń</h4>
+                                                        </header>
+                                                        <div id="workshop-detail-tickets">(Tu pojawią się zgłoszenia...)</div>
+                                                    </section>
+                                                </div>
+                                            </div>
+                                    </div>
                                 </div>
-                            </aside>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -241,11 +351,11 @@
                 </section>
 
                 <section class="panel-view" data-panel="logs">
-                    <div class="panel-card">
-                        <h2>Dziennik zdarzen</h2>
-                        <div class="panel-log panel-log--tall" id="logs-full"></div>
-                        <button class="btn btn--ghost" id="logs-clear-btn" type="button">Wyczysc logi</button>
-                    </div>
+                        <div class="panel-card">
+                            <h2>Dziennik zdarzen</h2>
+                            <ul class="panel-log panel-log--tall panel-log--audit" id="logs-full"></ul>
+                            <button class="btn btn--ghost" id="logs-refresh-btn" type="button">Odswiez logi</button>
+                        </div>
                 </section>
                     <section class="panel-view panel-view--workshop" data-panel="workshop-home">
                         <div class="panel-section panel-section--summary">
@@ -287,7 +397,7 @@
                                 </label>
                                 <label>
                                     Opis naprawy
-                                    <textarea name="summary" rows="3" placeholder="Opis wykonanych prac"></textarea>
+                                    <textarea name="summary" rows="3" placeholder="Opis wykonanych prac" required></textarea>
                                 </label>
                                 <label class="panel-upload">
                                     Zalacz zdjecia lub filmy
@@ -306,10 +416,102 @@
         </div>
     </div>
 
-    <script src="js/shared/settings.js"></script>
-    <script src="js/shared/logs.js"></script>
-    <script src="js/shared/reports.js"></script>
-    <script src="js/shared/workshops.js"></script>
+    <aside class="panel-drawer" id="metric-drawer" aria-hidden="true">
+        <div class="panel-drawer__header">
+            <div>
+                <p class="panel-section__eyebrow" id="metric-drawer-eyebrow"></p>
+                <h3 id="metric-drawer-title"></h3>
+            </div>
+            <button class="btn btn--ghost" type="button" id="metric-drawer-close">Zamknij</button>
+        </div>
+        <p class="panel-drawer__lead" id="metric-drawer-description"></p>
+        <div id="metric-drawer-content" class="panel-drawer__content"></div>
+    </aside>
+    <div class="panel-drawer__backdrop" id="metric-drawer-backdrop" hidden></div>
+
+    <aside class="panel-drawer panel-drawer--form" id="workshop-drawer" aria-hidden="true">
+        <div class="panel-drawer__header">
+            <div>
+                <p class="panel-section__eyebrow" id="workshop-drawer-eyebrow">Nowy warsztat</p>
+                <h3 id="workshop-drawer-title">Dodaj warsztat</h3>
+            </div>
+            <button class="btn btn--ghost" type="button" id="workshop-drawer-close">Zamknij</button>
+        </div>
+        <form id="create-workshop-form" class="panel-form panel-form--drawer" novalidate>
+            <label>
+                Nazwa warsztatu
+                <input type="text" name="name" required>
+            </label>
+            <label>
+                Miasto
+                <input type="text" name="city" placeholder="np. Krakow">
+            </label>
+            <label>
+                Adres
+                <input type="text" name="address" placeholder="np. ul. Mechanikow 12">
+            </label>
+            <label>
+                Telefon kontaktowy
+                <input type="tel" name="phone" placeholder="np. +48 123 456 789">
+            </label>
+            <label>
+                Adres e-mail
+                <input type="email" name="email" placeholder="np. biuro@warsztat.pl">
+            </label>
+            <label>
+                E-mail do faktur
+                <input type="email" name="billingEmail" placeholder="np. ksiegowosc@warsztat.pl">
+                <small class="panel-form__hint">Opcjonalny adres do korespondencji rozliczeniowej.</small>
+            </label>
+            <label>
+                E-mail logowania
+                <input type="email" name="loginEmail" placeholder="np. konto@warsztat.pl" required>
+            </label>
+            <label>
+                Haslo do panelu
+                <input type="password" name="loginPassword" placeholder="Minimum 8 znakow">
+                <small class="panel-form__hint">Przy dodawaniu nowego warsztatu haslo jest wymagane. Podczas edycji pozostaw puste, aby nie zmieniac.</small>
+            </label>
+            <label>
+                Status
+                <select name="status">
+                    <option value="active">Aktywny</option>
+                    <option value="inactive">Nieaktywny</option>
+                    <option value="notice">W okresie wypowiedzenia</option>
+                    <option value="deactivated">Dezaktywowany</option>
+                </select>
+            </label>
+            <label>
+                Kwota abonamentu (PLN)
+                <input type="number" name="subscriptionAmount" min="0" step="0.01" placeholder="np. 299">
+            </label>
+            <label>
+                Data startu abonamentu
+                <input type="date" name="subscriptionStartDate">
+            </label>
+            <label>
+                Kwota startowa (proporcjonalna)
+                <input type="number" name="subscriptionInitialAmount" min="0" step="0.01" placeholder="np. 149,50">
+                <small class="panel-form__hint">Pozwala zapisac pierwsza fakture, gdy umowa zaczyna sie w polowie miesiaca.</small>
+            </label>
+            <label>
+                Opis rozliczenia poczatkowego
+                <input type="text" name="subscriptionInitialNote" placeholder="np. 15-31 stycznia">
+            </label>
+            <label>
+                Notatki administracyjne
+                <textarea name="notes" rows="3" placeholder="Uwagi widoczne tylko w panelu"></textarea>
+            </label>
+            <div class="panel-form__actions panel-form__actions--spread">
+                <button class="btn btn--ghost" type="button" id="workshop-cancel-edit">Anuluj</button>
+                <button class="btn btn--secondary" type="submit" data-workshop-form-submit>Dodaj warsztat</button>
+            </div>
+        </form>
+        <p class="panel-feedback" id="workshop-feedback" aria-live="polite"></p>
+    </aside>
+    <div class="panel-drawer__backdrop" id="workshop-drawer-backdrop" hidden></div>
+
+    <script src="js/shared/api.js"></script>
     <script src="js/shared/session.js"></script>
     <script src="js/panel/dashboard.js"></script>
 </body>

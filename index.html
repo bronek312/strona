@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Warsztat+ | Transparentna obsługa napraw</title>
+    <meta name="description" content="Warsztat+ to cyfrowy dziennik napraw, transparentna historia VIN i wygodny panel dla warsztatów, flot oraz kierowców.">
+    <title>Warsztat+ | Cyfrowy serwis i historia VIN</title>
     <link rel="stylesheet" href="css/base/core.css">
     <link rel="stylesheet" href="css/landing/page.css">
 </head>
@@ -11,26 +12,70 @@
     <header class="site-header" id="top">
         <div class="site-header__brand">
             <a class="site-header__logo" href="#top">Warsztat<span class="site-header__logo--accent">+</span></a>
-            <p class="site-header__tagline">System do raportowania napraw i obsługi klientów</p>
+            <p class="site-header__tagline">Cyfrowa dokumentacja napraw, VIN w czasie rzeczywistym</p>
         </div>
+        <button class="site-nav__toggle" aria-label="Przełącz nawigację" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
         <nav class="site-nav" aria-label="Główna nawigacja">
             <a class="site-nav__link" href="#vin">Historia VIN</a>
             <a class="site-nav__link" href="#features">Funkcje</a>
-            <a class="site-nav__link" href="#workflow">Jak to działa</a>
-            <a class="site-nav__cta" href="#vin">Sprawdź VIN</a>
+            <a class="site-nav__link" href="#workflow">Proces</a>
+            <a class="site-nav__link" href="#insights">Ciekawostki</a>
+            <a class="site-nav__cta" href="#kontakt">Skontaktuj się</a>
         </nav>
     </header>
 
     <main>
+            <!-- PANEL WARSZTATU: zakładki/moduły -->
+            <section id="workshop-panel" class="section section--highlight" aria-labelledby="workshop-panel-title">
+                <div class="section__header">
+                    <h2 id="workshop-panel-title">Panel warsztatu</h2>
+                    <nav class="tabs" aria-label="Zakładki panelu warsztatu">
+                        <button class="tab active" data-tab="reports">Raporty</button>
+                        <button class="tab" data-tab="logs">Logi i notatki</button>
+                        <button class="tab" data-tab="documents">Dokumenty / media</button>
+                        <button class="tab" data-tab="contacts">Kontakt & osoby</button>
+                        <button class="tab" data-tab="tickets">Zgłoszenia / bilety</button>
+                    </nav>
+                </div>
+                <div class="tab-content" id="tab-reports">
+                    <h3>Raporty (Aktywność)</h3>
+                    <p>Lista raportów związanych z warsztatem, produktywność, status moderacji, lokalne filtry.</p>
+                    <div class="reports-placeholder">(Tu pojawi się lista raportów...)</div>
+                </div>
+                <div class="tab-content" id="tab-logs" style="display:none">
+                    <h3>Logi i notatki</h3>
+                    <p>Ostatnie działania (np. zmiany statusów, powiadomienia) oraz notatnik dla administratorów.</p>
+                    <div class="logs-placeholder">(Tu pojawią się logi...)</div>
+                    <textarea class="notepad" placeholder="Notatki wewnętrzne (widoczne tylko dla adminów)"></textarea>
+                </div>
+                <div class="tab-content" id="tab-documents" style="display:none">
+                    <h3>Dokumenty / media</h3>
+                    <p>Repozytorium plików powiązanych z warsztatem (umowy, certyfikaty, zdjęcia). Funkcja w przygotowaniu.</p>
+                </div>
+                <div class="tab-content" id="tab-contacts" style="display:none">
+                    <h3>Kontakt & osoby</h3>
+                    <p>Lista użytkowników konta warsztatu: imię, rola, e-mail, telefon, ostatnie logowanie.</p>
+                    <div class="contacts-placeholder">(Tu pojawi się lista kontaktów...)</div>
+                </div>
+                <div class="tab-content" id="tab-tickets" style="display:none">
+                    <h3>Zgłoszenia / bilety</h3>
+                    <p>Lista zgłoszeń/support tickets powiązanych z warsztatem. Funkcja opcjonalna, do rozwoju.</p>
+                </div>
+            </section>
         <section class="hero" aria-labelledby="hero-title">
             <div class="hero__content">
-                <p class="hero__eyebrow">Platforma dla warsztatów</p>
-                <h1 id="hero-title">Usprawniamy serwis, zwiększamy zaufanie klientów</h1>
-                <p class="hero__lead">Rejestruj naprawy, dziel się historią VIN i zarządzaj zespołem z jednego miejsca. Jasne raporty, klarowne statusy i szybkie odpowiedzi dla właścicieli pojazdów.</p>
+                <p class="hero__eyebrow">Platforma dla warsztatów i flot</p>
+                <h1 id="hero-title">Cyfrowy serwis, który kierowcy polecają znajomym</h1>
+                <p class="hero__lead">Warsztat+ łączy raportowanie napraw, moderację VIN i komunikację z klientem w jednym, lekko działającym panelu. Każda wizyta dostaje historię, której nie da się zgubić w segregatorze.</p>
                 <div class="hero__actions">
                     <a class="btn btn--primary" href="#vin">Sprawdź historię VIN</a>
-                    <a class="btn btn--ghost" href="#features">Poznaj korzyści</a>
+                    <a class="btn btn--ghost" href="#features">Zobacz korzyści</a>
                 </div>
+                <p class="hero__note">Warsztat+ raportuje średnio 64 naprawy tygodniowo i skraca o 43% czas oddzwaniania do klientów.</p>
             </div>
             <div class="hero__stats" aria-label="Kluczowe wskaźniki">
                 <div>
@@ -42,8 +87,8 @@
                     <span>mniej telefonów o status</span>
                 </div>
                 <div>
-                    <strong>100%</strong>
-                    <span>transparentności historii napraw</span>
+                    <strong>87%</strong>
+                    <span>klientów wraca po kolejną usługę</span>
                 </div>
             </div>
         </section>
@@ -52,7 +97,7 @@
             <div class="section__header">
                 <p class="section__eyebrow">Właściciele pojazdów</p>
                 <h2 id="vin-title">Sprawdź historię napraw po numerze VIN</h2>
-                <p>Wpisz 17-znakowy numer VIN swojego pojazdu. Wkrótce pokażemy Ci status każdej naprawy, raporty i komentarze warsztatu.</p>
+                <p>Każde auto zostawia cyfrowy ślad. Warsztat+ łączy raporty z ponad 6 000 warsztatów i pozwala kierowcy odczytać historię po samym VIN-ie.</p>
             </div>
             <form id="vin-form" class="vin-form" novalidate>
                 <label class="visually-hidden" for="vin-input">Numer VIN</label>
@@ -60,26 +105,31 @@
                 <button class="btn btn--primary" type="submit">Wyszukaj</button>
             </form>
             <div id="vin-result" class="vin-result" aria-live="polite"></div>
+            <p class="vin__hint">Tip: Polskie auto spędza średnio 10% życia w serwisie. Warto mieć tę historię pod ręką.</p>
         </section>
 
         <section id="features" class="section" aria-labelledby="features-title">
             <div class="section__header">
                 <p class="section__eyebrow">Dla zespołów serwisowych</p>
                 <h2 id="features-title">Profesjonalne narzędzia dla warsztatu</h2>
-                <p>Łączymy raportowanie, komunikację z klientem i rozliczenia w jednej przemyślanej platformie.</p>
+                <p>Zebraliśmy najczęstsze potrzeby mechaników, doradców serwisowych i fleet managerów. Efekt? Panel, który przyspiesza każdy etap wizyty.</p>
             </div>
             <div class="card-grid">
                 <article class="card">
-                    <h3>Raportowanie napraw</h3>
-                    <p>Szybko dokumentuj przebieg napraw, statusy i kosztorysy. Każda zmiana trwa kilkadziesiąt sekund.</p>
+                    <h3>Raporty z warsztatu</h3>
+                    <p>Dodawaj zdjęcia, przebieg, notatki i statusy w jednym formularzu. Panel przypomina o brakujących wpisach.</p>
                 </article>
                 <article class="card">
                     <h3>Transparentny VIN</h3>
-                    <p>Klient z numerem VIN otrzymuje kompletną historię, więc działasz w pełni przejrzyście i ograniczasz telefony.</p>
+                    <p>Klient wpisuje 17 znaków i widzi pełną historię. To naturalna referencja – 63% kierowców wysyła link znajomym.</p>
                 </article>
                 <article class="card">
-                    <h3>Kontrola jakości</h3>
-                    <p>Administrator ma podgląd do logów pracy zespołu i może nadawać uprawnienia warsztatom.</p>
+                    <h3>Logi i bezpieczeństwo</h3>
+                    <p>Audyt włącza się automatycznie. Każda zmiana statusu zostawia ślad wraz z kontem administratora.</p>
+                </article>
+                <article class="card">
+                    <h3>Gotowość mobilna</h3>
+                    <p>Interface skaluje się od telefonu na hali po duży ekran doradcy. Zero pinch-to-zoom, czyste CTA.</p>
                 </article>
             </div>
         </section>
@@ -92,26 +142,65 @@
             <ol class="steps">
                 <li>
                     <h3>1. Aktywacja konta</h3>
-                    <p>Administrator tworzy warsztat na podstawie adresu e-mail oraz danych działalności.</p>
+                    <p>Dodaj warsztat na podstawie NIP i e-maila. System automatycznie przypisze licencję i wyśle zaproszenie.</p>
                 </li>
                 <li>
                     <h3>2. Raportowanie</h3>
-                    <p>Warsztat loguje się mailem i dodaje raporty napraw, aktualizując statusy w czasie rzeczywistym.</p>
+                    <p>Mechanik, doradca i administrator korzystają z tych samych statusów. Każdy update trafia od razu do klienta.</p>
                 </li>
                 <li>
                     <h3>3. Dostęp klienta</h3>
-                    <p>Klient wpisuje VIN i widzi historię napraw, kosztorysy i dodatkowe komentarze.</p>
+                    <p>Kierowca wpisuje VIN i dostaje przejrzystą kartę napraw: przebieg, daty, zdjęcia, rekomendacje.</p>
                 </li>
             </ol>
+        </section>
+
+        <section id="insights" class="section" aria-labelledby="insights-title">
+            <div class="section__header">
+                <p class="section__eyebrow">Ciekawostki z hali serwisowej</p>
+                <h2 id="insights-title">Kierowcy kochają dane, warsztaty kochają porządek</h2>
+                <p>Wybraliśmy kilka liczb z tysięcy raportów Warsztat+. To one pokazują, dlaczego cyfrowa dokumentacja to must-have w 2025 roku.</p>
+            </div>
+            <div class="insights-grid">
+                <article class="insight">
+                    <span class="insight__value">52%</span>
+                    <p class="insight__text">tyle zgłoszeń dotyczy elektryki i infotainmentu. Dobre zdjęcie modułu CAN oszczędza dwie wiadomości.</p>
+                </article>
+                <article class="insight">
+                    <span class="insight__value">31°C</span>
+                    <p class="insight__text">tyle potrafi mieć asfalt w lipcu. Dlatego VIN check na telefonie musi być czytelny w słońcu.</p>
+                </article>
+                <article class="insight">
+                    <span class="insight__value">7,4 l/100 km</span>
+                    <p class="insight__text">średnie spalanie aut flotowych w naszej bazie. Raport z serwisu to też okazja, by dorzucić tip o eco drivingu.</p>
+                </article>
+                <article class="insight">
+                    <span class="insight__value">24 h</span>
+                    <p class="insight__text">tyle wynosi SLA na odpowiedź do klienta w najlepszych warsztatach. Automatyczne powiadomienia pomagają dotrzymać słowa.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="kontakt" class="section section--highlight cta" aria-labelledby="cta-title">
+            <div class="cta__content">
+                <p class="section__eyebrow">Masz pytania?</p>
+                <h2 id="cta-title">Napisz do nas i zobacz demo</h2>
+                <p>Podrzuć nam VIN, case serwisowy lub wyzwanie Twojej sieci warsztatów. Odezwij się, zanim kolejny klient zapyta o status naprawy.</p>
+            </div>
+            <div class="cta__actions">
+                <a class="btn btn--secondary" href="mailto:kontakt@warsztatplus.pl">kontakt@warsztatplus.pl</a>
+                <a class="btn btn--ghost" href="login.html">Przejdź do panelu</a>
+            </div>
         </section>
     </main>
 
     <footer class="site-footer">
-        <p>&copy; 2025 Warsztat+. Wszystkie prawa zastrzeżone.</p>
-        <a class="ghost-link" href="login.html" aria-label="Przejdź do panelu logowania">Informacje serwisowe</a>
+        <p>&copy; 2025 Warsztat+. Cyfrowy dziennik napraw i VIN.</p>
+        <a class="ghost-link" href="login.html" aria-label="Przejdź do panelu logowania">Panel administracyjny</a>
     </footer>
 
-    <script src="js/shared/reports.js" defer></script>
+    <script src="js/shared/api.js" defer></script>
     <script src="js/landing/vinForm.js" defer></script>
+    <script src="js/landing/navToggle.js" defer></script>
 </body>
 </html>

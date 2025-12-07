@@ -34,8 +34,8 @@
         const items = media
             .map((item, index) => {
                 const label = item.name || `Zalacznik ${index + 1}`;
-                if (item.dataUrl) {
-                    return `<li><a href="${item.dataUrl}" target="_blank" rel="noopener">${label}</a></li>`;
+                if (item.url) {
+                    return `<li><a href="${item.url}" target="_blank" rel="noopener">${label}</a></li>`;
                 }
                 return `<li>${label}</li>`;
             })
@@ -45,7 +45,7 @@
 
     const renderResult = (container, vin, reports) => {
         if (!reports.length) {
-            container.textContent = 'Brak zaakceptowanych raportow dla podanego VIN. Wkrotce dodamy wiecej danych.';
+            container.textContent = 'Brak zaakceptowanych raportow dla podanego VIN.';
             return;
         }
 
@@ -53,8 +53,8 @@
             .map((report) => `
                 <article class="vin-card">
                     <header>
-                        <strong>${report.workshop}</strong>
-                        <span>Status: ${report.status}</span>
+                        <strong>${report.workshopName || 'Warsztat'}</strong>
+                        <span>Status: ${report.status || '—'}</span>
                     </header>
                     <div class="vin-card__meta">
                         <span>Rejestracja: ${report.registrationNumber || 'Brak danych'}</span>
@@ -75,13 +75,10 @@
     };
 
     document.addEventListener('DOMContentLoaded', () => {
-        if (!window.WarsztatReports) {
-            console.error('Brak modulu raportow');
+        if (!window.WarsztatApi) {
+            console.error('Brak klienta API');
             return;
         }
-
-        const { ensureSeeded, findByVin, APPROVAL_STATES } = window.WarsztatReports;
-        ensureSeeded();
 
         const form = document.getElementById(VIN_FORM_ID);
         const input = document.getElementById(VIN_INPUT_ID);
@@ -91,7 +88,7 @@
             return;
         }
 
-        form.addEventListener('submit', (event) => {
+        form.addEventListener('submit', async (event) => {
             event.preventDefault();
             const vin = input.value.trim().toUpperCase();
 
@@ -100,10 +97,15 @@
                 return;
             }
 
-            const reports = findByVin(vin).filter(
-                (report) => report.approvalStatus === (APPROVAL_STATES?.approved || 'approved')
-            );
-            renderResult(result, vin, reports);
+            result.textContent = 'Trwa wyszukiwanie w bazie...';
+
+            try {
+                const reports = await window.WarsztatApi.get(`/reports/public/${vin}`, { auth: false });
+                renderResult(result, vin, Array.isArray(reports) ? reports : []);
+            } catch (error) {
+                console.error('Nie udalo sie pobrac raportow', error);
+                result.textContent = 'Nie udalo sie polaczyc z API. Sprobuj ponownie pozniej.';
+            }
         });
     });
 })();

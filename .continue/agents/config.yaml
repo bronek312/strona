@@ -1,0 +1,11 @@
+models:
+  - title: DeepSeek Coder 33B
+    provider: ollama
+    model: deepseek-coder:33b
+    apiBase: http://localhost:11434
+
+tabAutocompleteModel:
+  title: DeepSeek Coder 33B
+  provider: ollama
+  model: deepseek-coder:33b
+  apiBase: http://localhost:11434

@@ -161,6 +161,51 @@ body {
     margin-bottom: 0.4rem;
 }
 
+/* --- Warsztat Panel Tabs --- */
+.tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+.tab {
+    background: #f4f6f8;
+    border: none;
+    border-radius: 6px 6px 0 0;
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #222;
+    transition: background 0.2s, color 0.2s;
+}
+.tab.active {
+    background: var(--color-primary);
+    color: #fff;
+    font-weight: bold;
+}
+.tab-content {
+    background: #fff;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    padding: 2rem 1.5rem;
+    margin-bottom: 2rem;
+}
+.notepad {
+    width: 100%;
+    min-height: 80px;
+    margin-top: 1rem;
+    padding: 0.7rem;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    font-size: 1rem;
+    resize: vertical;
+}
+.reports-placeholder, .logs-placeholder, .contacts-placeholder {
+    color: #888;
+    font-style: italic;
+    margin: 1rem 0;
+}
+
 .card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

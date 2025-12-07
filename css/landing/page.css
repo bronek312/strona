@@ -42,6 +42,7 @@
     display: flex;
     gap: 1rem;
     align-items: center;
+    transition: max-height 0.3s ease;
 }
 
 .site-nav__link,
@@ -58,12 +59,28 @@
     color: #ffffff;
 }
 
+.site-nav__toggle {
+    display: none;
+    flex-direction: column;
+    gap: 0.25rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.site-nav__toggle span {
+    width: 28px;
+    height: 2px;
+    background: var(--color-primary);
+}
+
 .hero {
     padding: 4rem 5vw 3rem;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
     align-items: center;
+    background: linear-gradient(135deg, #f5f8fb 0%, #e6eef7 50%, #ffffff 100%);
 }
 
 .hero__content {
@@ -80,6 +97,12 @@
 
 .hero__lead {
     font-size: 1.1rem;
+    color: var(--color-muted);
+}
+
+.hero__note {
+    margin-top: 1rem;
+    font-size: 0.95rem;
     color: var(--color-muted);
 }
 
@@ -176,6 +199,12 @@
     color: var(--color-muted);
 }
 
+.vin__hint {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    margin-top: 0.5rem;
+}
+
 .vin-card-list {
     display: grid;
     gap: 1rem;
@@ -243,6 +272,49 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.25rem;
+}
+
+.insight {
+    background: #ffffff;
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-soft);
+    min-height: 150px;
+}
+
+.insight__value {
+    font-size: 2rem;
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.insight__text {
+    margin-top: 0.5rem;
+    color: var(--color-muted);
+    line-height: 1.4;
+}
+
+.cta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1.5rem;
+    align-items: center;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+}
+
+.cta__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 220px;
+}
+
 .site-footer {
     margin-top: auto;
     padding: 1.5rem 5vw;
@@ -255,15 +327,28 @@
 }
 
 @media (max-width: 768px) {
+    .site-nav__toggle {
+        display: flex;
+    }
+
     .site-nav {
         width: 100%;
-        justify-content: flex-start;
-        flex-wrap: wrap;
-        margin-top: 1rem;
+        flex-direction: column;
+        max-height: 0;
+        overflow: hidden;
+    }
+
+    .site-nav.is-open {
+        max-height: 320px;
+        padding-top: 1rem;
     }
 
     .site-footer {
         flex-direction: column;
         gap: 1rem;
+    }
+
+    .cta {
+        flex-direction: column;
     }
 }

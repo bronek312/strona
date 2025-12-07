@@ -20,6 +20,8 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: var(--color-bg);
     color: var(--color-text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
 }
 
 a {
@@ -64,6 +66,14 @@ ul {
 
 .btn:hover {
     transform: translateY(-2px);
+}
+
+.btn:focus-visible,
+.site-nav__link:focus-visible,
+.site-nav__cta:focus-visible,
+.ghost-link:focus-visible {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 3px;
 }
 
 .ghost-link {

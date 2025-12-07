@@ -1,12 +1,7 @@
 (function (window) {
     const SESSION_KEY = 'warsztat:session';
-    const ADMIN_CREDENTIALS = { login: 'test', password: 'test' };
 
-    const saveSession = (session) => {
-        sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    };
-
-    const getSession = () => {
+    const readSession = () => {
         try {
             return JSON.parse(sessionStorage.getItem(SESSION_KEY));
         } catch (error) {
@@ -14,12 +9,40 @@
         }
     };
 
-    const clearSession = () => sessionStorage.removeItem(SESSION_KEY);
+    const persistSession = (session) => {
+        if (!session) {
+            sessionStorage.removeItem(SESSION_KEY);
+            return;
+        }
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    };
+
+    const syncApiToken = (token) => {
+        if (!window.WarsztatApi) {
+            return;
+        }
+        if (token) {
+            window.WarsztatApi.setToken(token);
+        } else {
+            window.WarsztatApi.clearToken();
+        }
+    };
+
+    const current = readSession();
+    if (current?.token) {
+        syncApiToken(current.token);
+    }
 
     window.WarsztatSession = {
-        ADMIN_CREDENTIALS,
-        save: saveSession,
-        get: getSession,
-        clear: clearSession
+        save: (session) => {
+            persistSession(session);
+            syncApiToken(session?.token);
+        },
+        get: readSession,
+        clear: () => {
+            persistSession(null);
+            syncApiToken(null);
+        },
+        getToken: () => readSession()?.token || null
     };
 })(window);

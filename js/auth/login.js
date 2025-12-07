@@ -13,16 +13,16 @@
     };
 
     document.addEventListener('DOMContentLoaded', () => {
-        if (!window.WarsztatSession || !window.WarsztatWorkshops) {
-            console.error('Brakuje modulow sesji lub warsztatow');
+        if (!window.WarsztatApi || !window.WarsztatSession) {
+            console.error('Brakuje modulu API lub sesji');
             return;
         }
 
         const form = document.getElementById('unified-login-form');
         const feedback = document.querySelector('[data-feedback="login"]');
-        const { ADMIN_CREDENTIALS } = window.WarsztatSession;
+        const submitBtn = form?.querySelector('button[type="submit"]');
 
-        form?.addEventListener('submit', (event) => {
+        form?.addEventListener('submit', async (event) => {
             event.preventDefault();
             const formData = new FormData(form);
             const identifier = String(formData.get('identifier') || '').trim();
@@ -33,34 +33,28 @@
                 return;
             }
 
-            const lowerIdentifier = identifier.toLowerCase();
-            const isAdminLogin = lowerIdentifier === ADMIN_CREDENTIALS.login.toLowerCase();
+            submitBtn?.setAttribute('disabled', 'true');
+            setFeedback(feedback, 'Logowanie...', null);
 
-            if (isAdminLogin) {
-                if (password === ADMIN_CREDENTIALS.password) {
-                    window.WarsztatSession.save({
-                        role: 'admin',
-                        user: { name: 'Administrator', email: 'admin@warsztat.plus' }
-                    });
-                    setFeedback(feedback, 'Logowanie udane. Przekierowuje...', 'success');
-                    window.location.href = PANEL_URL;
-                } else {
-                    setFeedback(feedback, 'Niepoprawne haslo administratora.', 'error');
-                }
-                return;
-            }
-
-            const match = window.WarsztatWorkshops.findByCredentials(lowerIdentifier, password);
-
-            if (match) {
+            try {
+                const payload = { email: identifier.toLowerCase(), password };
+                const response = await window.WarsztatApi.post('/auth/login', payload, { auth: false });
+                const userRole = response.role || 'admin';
                 window.WarsztatSession.save({
-                    role: 'workshop',
-                    user: match
+                    token: response.token,
+                    role: userRole,
+                    user: {
+                        email: response.email || identifier,
+                        workshopId: response.workshopId || null
+                    }
                 });
-                setFeedback(feedback, `Witaj ponownie, ${match.name}.`, 'success');
+                setFeedback(feedback, 'Zalogowano pomyslnie. Przekierowuje...', 'success');
                 window.location.href = PANEL_URL;
-            } else {
-                setFeedback(feedback, 'Niepoprawny e-mail lub haslo warsztatu.', 'error');
+            } catch (error) {
+                const message = error.details?.message || 'Niepoprawny e-mail lub haslo.';
+                setFeedback(feedback, message, 'error');
+            } finally {
+                submitBtn?.removeAttribute('disabled');
             }
         });
     });
