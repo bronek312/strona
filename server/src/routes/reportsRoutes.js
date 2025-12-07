@@ -156,3 +156,34 @@ router.patch('/:id/status', requireAuth, (req, res) => {
 });
 
 export default router;
+
+// 1. Moje raporty (dla warsztatu)
+router.get('/mine', authMiddleware, (req, res) => {
+  const workshopId = req.user.workshopId || req.user.id;
+  const stmt = db.prepare('SELECT * FROM reports WHERE workshop_id = ? ORDER BY createdAt DESC');
+  const reports = stmt.all(workshopId);
+  res.json(reports);
+});
+
+// 2. Dodaj raport (dla warsztatu)
+router.post('/mine', authMiddleware, (req, res) => {
+  const { vin, plate, model, mileage, description } = req.body;
+  const workshopId = req.user.workshopId || req.user.id;
+
+  if (!vin || vin.length !== 17 || !plate || !description) {
+    return res.status(400).json({ error: "Nieprawidłowe dane" });
+  }
+
+  const stmt = db.prepare(`
+    INSERT INTO reports (vin, plate, model, mileage, description, workshop_id, status, createdAt)
+    VALUES (?, ?, ?, ?, ?, ?, 'pending', datetime('now'))
+  `);
+  
+  try {
+    const result = stmt.run(vin.toUpperCase(), plate.toUpperCase(), model || null, mileage, description, workshopId);
+    const newReport = db.prepare('SELECT * FROM reports WHERE id = ?').get(result.lastInsertRowid);
+    res.status(201).json(newReport);
+  } catch (err) {
+    res.status(500).json({ error: "Błąd zapisu" });
+  }
+});

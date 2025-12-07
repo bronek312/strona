@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Warsztatu • Warsztat+</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root { --p:#2563eb; --s:#10b981; --d:#ef4444; }
+    body { margin:0; font-family:'Segoe UI',sans-serif; background:#f4f6f9; display:flex; min-height:100vh; color:#1f2937; }
+    .sidebar { width:280px; background:white; box-shadow:2px 0 15px rgba(0,0,0,0.1); padding:2rem 0; position:fixed; height:100%; z-index:10; }
+    .sidebar h2 { margin:0 1.5rem 2rem; color:var(--p); font-size:1.8rem; }
+    .sidebar a { display:block; padding:1rem 1.5rem; color:#374151; text-decoration:none; font-weight:500; border-left:4px solid transparent; cursor:pointer; }
+    .sidebar a:hover, .sidebar a.active { background:#eff6ff; color:var(--p); border-left-color:var(--p); font-weight:600; }
+    .main { margin-left:280px; flex:1; padding:2rem; }
+    .content { display:none; }
+    .content.active { display:block; }
+    .card { background:white; padding:2rem; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); }
+    .btn-big { background:var(--p); color:white; border:none; padding:1rem 2.5rem; border-radius:12px; font-size:1.2rem; cursor:pointer; font-weight:600; }
+    table { width:100%; border-collapse:collapse; margin-top:1rem; }
+    th, td { padding:1rem; text-align:left; border-bottom:1px solid #eee; }
+    th { background:#f8fafc; }
+    .status { padding:0.4rem 1rem; border-radius:50px; color:white; font-size:0.85rem; }
+    .status.pending { background:#f59e0b; }
+    .status.approved { background:var(--s); }
+    .status.rejected { background:var(--d); }
+  </style>
+</head>
+<body>
+
+  <nav class="sidebar">
+    <h2>Warsztat+</h2>
+    <a data-target="dodaj" class="active">Dodaj raport</a>
+    <a data-target="moje">Moje raporty</a>
+    <a data-target="dane">Moje dane</a>
+    <a data-target="kontakt">Kontakt</a>
+    <div style="margin:3rem 1.5rem;">
+      <div id="workshop-name" style="font-weight:600;">Ładowanie...</div>
+      <button onclick="logout()" style="margin-top:1rem; width:100%; background:#ef4444; color:white; border:none; padding:0.8rem; border-radius:8px; cursor:pointer;">Wyloguj się</button>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div id="dodaj" class="content active">
+      <div class="card">
+        <h1>Dodaj nowy raport</h1>
+        <button class="btn-big" onclick="openAddModal()">+ Dodaj raport naprawy</button>
+      </div>
+    </div>
+
+    <div id="moje" class="content">
+      <div class="card">
+        <h1>Moje raporty</h1>
+        <div id="reports-container">Ładowanie raportów...</div>
+      </div>
+    </div>
+
+    <div id="dane" class="content">
+      <div class="card">
+        <h1>Moje dane</h1>
+        <p><strong>Nazwa:</strong> <span id="w-name">-</span></p>
+        <p><strong>E-mail:</strong> <span id="w-email">-</span></p>
+      </div>
+    </div>
+
+    <div id="kontakt" class="content">
+      <div class="card">
+        <h1>Kontakt</h1>
+        <p>Formularz kontaktowy działa przez Formspree</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL -->
+  <div id="add-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:white;padding:2.5rem;border-radius:16px;width:90%;max-width:560px;">
+      <h2>Nowy raport naprawy</h2>
+      <form id="add-report-form">
+        <input type="text" placeholder="VIN (17 znaków)" maxlength="17" required id="vin" style="width:100%;padding:0.9rem;margin:0.8rem 0;border:1px solid #ddd;border-radius:8px;text-transform:uppercase;">
+        <input type="text" placeholder="Nr rejestracyjny" required id="plate" style="width:100%;padding:0.9rem;margin:0.8rem 0;border:1px solid #ddd;border-radius:8px;">
+        <input type="text" placeholder="Marka i model" required id="model" style="width:100%;padding:0.9rem;margin:0.8rem 0;border:1px solid #ddd;border-radius:8px;">
+        <input type="number" placeholder="Przebieg (km)" required id="mileage" style="width:100%;padding:0.9rem;margin:0.8rem 0;border:1px solid #ddd;border-radius:8px;">
+        <textarea placeholder="Opis wykonanych prac..." required rows="5" style="width:100%;padding:0.9rem;margin:0.8rem 0;border:1px solid #ddd;border-radius:8px;"></textarea>
+        <div style="display:flex;gap:1rem;margin-top:1.5rem;">
+          <button type="submit" class="btn-big" style="flex:1;">Wyślij raport</button>
+          <button type="button" onclick="closeAddModal()" style="flex:1;background:#e5e7eb;color:#374151;border:none;border-radius:8px;">Anuluj</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/shared/session.js"></script>
+  <script src="js/shared/api.js"></script>
+  <script>
+    // Czekamy na API
+    (async () => {
+      // Czekamy na WarsztatApi
+      while (!window.WarsztatApi) await new Promise(r => setTimeout(r, 50));
+
+      const get = window.WarsztatApi.get.bind(window.WarsztatApi);
+      const post = window.WarsztatApi.post.bind(window.WarsztatApi);
+
+      // Przełączanie sekcji
+      document.querySelectorAll('.sidebar a[data-target]').forEach(link => {
+        link.addEventListener('click', () => {
+          document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+          link.classList.add('active');
+          document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+          document.getElementById(link.dataset.target).classList.add('active');
+        });
+      });
+
+      // Globalne funkcje
+      window.openAddModal = () => {
+        document.getElementById("add-modal").style.display = "flex";
+        document.getElementById("vin").focus();
+      };
+      window.closeAddModal = () => {
+        document.getElementById("add-modal").style.display = "none";
+        document.getElementById("add-report-form").reset();
+      };
+      window.logout = () => {
+        sessionStorage.clear();
+        location.href = "login.html";
+      };
+
+      // Dane warsztatu
+      try {
+        const w = await get("/api/workshops/me");
+        document.getElementById("workshop-name").textContent = w.name || w.email || "Warsztat";
+        document.getElementById("w-name").textContent = w.name || "-";
+        document.getElementById("w-email").textContent = w.email || "-";
+      } catch(e) {
+        document.getElementById("workshop-name").textContent = "Błąd połączenia";
+      }
+
+      // Raporty
+      async function loadReports() {
+        try {
+          const res = await get("/api/reports/mine");
+          const reports = Array.isArray(res) ? res : [];
+          const c = document.getElementById("reports-container");
+          if (reports.length === 0) return c.innerHTML = "<p>Brak raportów</p>";
+          let html = "<table><thead><tr><th>VIN</th><th>Pojazd</th><th>Rejestracja</th><th>Data</th><th>Status</th></tr></thead><tbody>";
+          reports.forEach(r => {
+            const d = new Date(r.createdAt || r.date);
+            const st = r.status === "approved" ? "approved" : r.status === "rejected" ? "rejected" : "pending";
+            const txt = r.status === "approved" ? "Zatwierdzony" : r.status === "rejected" ? "Odrzucony" : "Oczekujący";
+            html += `<tr><td><strong>${r.vin}</strong></td><td>${r.model||"-"}</td><td>${r.plate||"-"}</td><td>${d.toLocaleDateString()}</td><td><span class="status ${st}">${txt}</span></td></tr>`;
+          });
+          c.innerHTML = html + "</tbody></table>";
+        } catch(e) {
+          document.getElementById("reports-container").innerHTML = "<p style='color:red'>Błąd: Backend nie odpowiada (404)</p><p>Uruchom: <code>cd server && npm run dev</code></p>";
+        }
+      }
+
+      // Dodaj raport
+      document.getElementById("add-report-form").addEventListener("submit", async e => {
+        e.preventDefault();
+        const vin = document.getElementById("vin").value.trim().toUpperCase();
+        const plate = document.getElementById("plate").value.trim().toUpperCase();
+        const model = document.getElementById("model").value.trim() || "Nie podano";
+        const mileage = Number(document.getElementById("mileage").value);
+        const description = e.target.querySelector("textarea").value.trim();
+
+        if (vin.length !== 17) return alert("VIN musi mieć 17 znaków!");
+        if (!plate || !mileage || !description) return alert("Wypełnij wszystkie pola!");
+
+        try {
+          await post("/api/reports/mine", { vin, plate, model, mileage, description });
+          alert("Raport dodany!");
+          closeAddModal();
+          loadReports();
+        } catch(err) {
+          alert("Błąd backendu – sprawdź czy serwer działa na porcie 4000");
+        }
+      });
+
+      loadReports();
+    })();
+  </script>
+  <script>
+// RĘCZNE PROXY – działa nawet bez bs-config.json
+(function() {
+  const originalFetch = window.fetch;
+  window.fetch = function(resource, options = {}) {
+    let url = resource;
+    if (typeof resource === 'string' && resource.startsWith('/api/')) {
+      url = 'http://localhost:4000' + resource;
+    }
+    return originalFetch(url, options);
+  };
+})();
+</script>
+</body>
+</html>

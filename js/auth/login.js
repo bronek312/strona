@@ -1,10 +1,6 @@
 (function () {
-    const PANEL_URL = 'panel.html';
-
     const setFeedback = (element, message, type) => {
-        if (!element) {
-            return;
-        }
+        if (!element) return;
         element.textContent = message;
         element.classList.remove('is-error', 'is-success');
         if (type) {
@@ -14,7 +10,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         if (!window.WarsztatApi || !window.WarsztatSession) {
-            console.error('Brakuje modulu API lub sesji');
+            console.error('Brakuje modułu API lub sesji');
             return;
         }
 
@@ -29,7 +25,7 @@
             const password = String(formData.get('password') || '').trim();
 
             if (!identifier || !password) {
-                setFeedback(feedback, 'Uzupelnij oba pola logowania.', 'error');
+                setFeedback(feedback, 'Uzupełnij oba pola logowania.', 'error');
                 return;
             }
 
@@ -39,19 +35,37 @@
             try {
                 const payload = { email: identifier.toLowerCase(), password };
                 const response = await window.WarsztatApi.post('/auth/login', payload, { auth: false });
-                const userRole = response.role || 'admin';
+
+                // Zapis sesji
                 window.WarsztatSession.save({
                     token: response.token,
-                    role: userRole,
+                    role: response.role || 'workshop',
                     user: {
                         email: response.email || identifier,
                         workshopId: response.workshopId || null
                     }
                 });
-                setFeedback(feedback, 'Zalogowano pomyslnie. Przekierowuje...', 'success');
-                window.location.href = PANEL_URL;
+
+                setFeedback(feedback, 'Zalogowano pomyślnie. Przekierowuje...', 'success');
+                if (response.role === "admin" || (response.email && response.email.toLowerCase().includes("admin"))) {
+                    window.location.href = "panel.html";
+                } else {
+                    window.location.href = "panel-warsztatu.html";
+                }
+
+                // INTELIGENTNE PRZEKIEROWANIE
+                if (response.role === "admin" || response.isAdmin === true) {
+                    window.location.href = "panel.html";
+                }
+                else if (response.email && response.email.toLowerCase().includes("admin")) {
+                    window.location.href = "panel.html";
+                }
+                else {
+                    window.location.href = "panel-warsztatu.html";
+                }
+
             } catch (error) {
-                const message = error.details?.message || 'Niepoprawny e-mail lub haslo.';
+                const message = error.details?.message || 'Niepoprawny e-mail lub hasło.';
                 setFeedback(feedback, message, 'error');
             } finally {
                 submitBtn?.removeAttribute('disabled');
