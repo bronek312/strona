@@ -1,6 +1,10 @@
-# ...existing code...
-.archive/
+﻿@"
 node_modules/
-*.lnk
-all-files.txt
-repo-changes.patch
+*.log
+.env
+*.db
+*.db-shm
+*.db-wal
+server/data/*.db
+.DS_Store
+"@ | Out-File -Encoding UTF8 .gitignore
