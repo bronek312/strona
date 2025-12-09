@@ -1,3 +1,4 @@
+
 (function () {
 			// --- Obsługa kliknięcia na kartę warsztatu i pobieranie szczegółów ---
 			document.addEventListener('click', async function (e) {

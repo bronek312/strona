@@ -16,6 +16,7 @@ import {
 } from '../services/workshopBillingService.js';
 import { createWorkshopAccount, upsertWorkshopAccount } from '../services/workshopUsersService.js';
 import { logAction } from '../services/auditService.js';
+import { db } from '../db.js';
 
 const router = Router();
 
@@ -268,10 +269,3 @@ router.patch('/:id/billing/:billingId', requireAuth, (req, res) => {
 });
 
 export default router;
-
-router.get('/me', authMiddleware, (req, res) => {
-  const workshopId = req.user.workshopId || req.user.id;
-  const workshop = db.prepare('SELECT id, name, email, phone, address FROM workshops WHERE id = ?').get(workshopId);
-  if (!workshop) return res.status(404).json({ error: "Warsztat nie znaleziony" });
-  res.json(workshop);
-});

@@ -2277,4 +2277,66 @@
 
         loadInitialData();
     });
+
+    document.addEventListener('DOMContentLoaded', () => {
+    // === INTEGRACJA GUS ===
+    const nipInput = document.getElementById('workshop-nip');
+    const loadingEl = document.getElementById('gus-loading');
+    const feedbackEl = document.getElementById('nip-feedback');
+
+    // Pola do wypełnienia
+    const nameInput = document.getElementById('workshop-name');
+    const cityInput = document.getElementById('workshop-city');
+    const zipInput = document.getElementById('workshop-zip');
+    const addressInput = document.getElementById('workshop-address');
+
+    if (nipInput) {
+        nipInput.addEventListener('blur', async () => {
+            const nip = nipInput.value.replace(/[^0-9]/g, ''); // Usuń myślniki i spacje
+
+            if (nip.length !== 10) {
+                if(nip.length > 0) showError('NIP musi mieć 10 cyfr');
+                return;
+            }
+
+            // Reset UI
+            feedbackEl.style.display = 'none';
+            loadingEl.style.display = 'inline-block';
+            nipInput.disabled = true;
+
+            try {
+                // Wywołanie Twojego backendu (zakładam, że api.js obsługuje metodę get)
+                // Jeśli nie używasz window.WarsztatApi, użyj zwykłego fetch()
+                const data = await window.WarsztatApi.get(`/gus/${nip}`);
+                if (data) {
+                    // Automatyczne wypełnianie
+                    if(nameInput) nameInput.value = data.name || '';
+                    if(cityInput) cityInput.value = data.city || '';
+                    if(zipInput) zipInput.value = data.zip || '';
+                    if(addressInput) addressInput.value = data.address || ''; // Ulica i nr
+
+                    // Efekt wizualny sukcesu
+                    nameInput.style.backgroundColor = '#dcfce7'; // Jasny zielony
+                    setTimeout(() => nameInput.style.backgroundColor = '', 1500);
+                }
+
+            } catch (error) {
+                console.error("Błąd GUS:", error);
+                if (error.status === 404) {
+                    showError('Nie znaleziono firmy w bazie GUS.');
+                } else {
+                    showError('Błąd pobierania danych. Wpisz ręcznie.');
+                }
+            } finally {
+                loadingEl.style.display = 'none';
+                nipInput.disabled = false;
+            }
+        });
+    }
+
+    function showError(msg) {
+        feedbackEl.textContent = msg;
+        feedbackEl.style.display = 'block';
+    }
+});
 })();

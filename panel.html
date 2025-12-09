@@ -437,18 +437,43 @@
             </div>
             <button class="btn btn--ghost" type="button" id="workshop-drawer-close">Zamknij</button>
         </div>
+        
         <form id="create-workshop-form" class="panel-form panel-form--drawer" novalidate>
+            
+            <!-- NOWE POLE: NIP Z INTEGRACJĄ GUS -->
+            <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; border: 1px solid #bbf7d0; margin-bottom: 15px;">
+                <label style="font-weight: bold; color: #166534;">
+                    NIP (Automatyczne pobieranie danych)
+                    <div style="position: relative; display: flex; align-items: center; gap: 10px;">
+                        <input type="text" name="nip" id="workshop-nip" placeholder="Wpisz NIP i kliknij obok..." maxlength="10" style="font-weight: bold;">
+                        <span id="gus-loading" style="display:none; color:#2563eb; white-space: nowrap;">
+                            <i class="fas fa-spinner fa-spin"></i> Pobieram...
+                        </span>
+                    </div>
+                    <small id="nip-feedback" style="color:#ef4444; display:none; margin-top:5px;"></small>
+                </label>
+            </div>
+            <!-- KONIEC NOWEGO POLA -->
+
             <label>
                 Nazwa warsztatu
-                <input type="text" name="name" required>
+                <input type="text" name="name" id="workshop-name" required>
             </label>
+            
+            <div style="display: flex; gap: 10px;">
+                <label style="flex: 1;">
+                    Kod pocztowy
+                    <input type="text" name="zip" id="workshop-zip" placeholder="00-000">
+                </label>
+                <label style="flex: 2;">
+                    Miasto
+                    <input type="text" name="city" id="workshop-city" placeholder="np. Kraków">
+                </label>
+            </div>
+
             <label>
-                Miasto
-                <input type="text" name="city" placeholder="np. Krakow">
-            </label>
-            <label>
-                Adres
-                <input type="text" name="address" placeholder="np. ul. Mechanikow 12">
+                Adres (Ulica i numer)
+                <input type="text" name="address" id="workshop-address" placeholder="np. ul. Mechaników 12">
             </label>
             <label>
                 Telefon kontaktowy
@@ -460,7 +485,7 @@
             </label>
             <label>
                 E-mail do faktur
-                <input type="email" name="billingEmail" placeholder="np. ksiegowosc@warsztat.pl">
+                <input type="email" name="billingEmail" placeholder="np. księgowość@warsztat.pl">
                 <small class="panel-form__hint">Opcjonalny adres do korespondencji rozliczeniowej.</small>
             </label>
             <label>
@@ -468,9 +493,9 @@
                 <input type="email" name="loginEmail" placeholder="np. konto@warsztat.pl" required>
             </label>
             <label>
-                Haslo do panelu
-                <input type="password" name="loginPassword" placeholder="Minimum 8 znakow">
-                <small class="panel-form__hint">Przy dodawaniu nowego warsztatu haslo jest wymagane. Podczas edycji pozostaw puste, aby nie zmieniac.</small>
+                Hasło do panelu
+                <input type="password" name="loginPassword" placeholder="Minimum 8 znaków">
+                <small class="panel-form__hint">Przy dodawaniu nowego warsztatu hasło jest wymagane. Podczas edycji pozostaw puste, aby nie zmieniać.</small>
             </label>
             <label>
                 Status
@@ -492,10 +517,9 @@
             <label>
                 Kwota startowa (proporcjonalna)
                 <input type="number" name="subscriptionInitialAmount" min="0" step="0.01" placeholder="np. 149,50">
-                <small class="panel-form__hint">Pozwala zapisac pierwsza fakture, gdy umowa zaczyna sie w polowie miesiaca.</small>
             </label>
             <label>
-                Opis rozliczenia poczatkowego
+                Opis rozliczenia początkowego
                 <input type="text" name="subscriptionInitialNote" placeholder="np. 15-31 stycznia">
             </label>
             <label>

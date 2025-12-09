@@ -9,8 +9,9 @@
     };
 
     document.addEventListener('DOMContentLoaded', () => {
-        if (!window.WarsztatApi || !window.WarsztatSession) {
-            console.error('Brakuje modułu API lub sesji');
+        // Sprawdzamy czy API jest dostępne, ale nie blokujemy jeśli brakuje Session (naprawimy to ręcznie)
+        if (!window.WarsztatApi) {
+            console.error('Brakuje modułu API');
             return;
         }
 
@@ -36,36 +37,40 @@
                 const payload = { email: identifier.toLowerCase(), password };
                 const response = await window.WarsztatApi.post('/auth/login', payload, { auth: false });
 
-                // Zapis sesji
-                window.WarsztatSession.save({
-                    token: response.token,
-                    role: response.role || 'workshop',
-                    user: {
-                        email: response.email || identifier,
-                        workshopId: response.workshopId || null
-                    }
-                });
+                // --- POPRAWKA: BEZPOŚREDNI ZAPIS TOKENA DLA PANELU ---
+                // To gwarantuje, że panel-warsztatu.html znajdzie token
+                console.log("Logowanie udane, zapisuję token:", response.token);
+                localStorage.setItem('token', response.token);
+                sessionStorage.setItem('token', response.token);
+                // -----------------------------------------------------
+
+                // Opcjonalnie: stary sposób zapisu (dla kompatybilności wstecznej)
+                if (window.WarsztatSession) {
+                    window.WarsztatSession.save({
+                        token: response.token,
+                        role: response.role || 'workshop',
+                        user: {
+                            email: response.email || identifier,
+                            workshopId: response.workshopId || null
+                        }
+                    });
+                }
 
                 setFeedback(feedback, 'Zalogowano pomyślnie. Przekierowuje...', 'success');
-                if (response.role === "admin" || (response.email && response.email.toLowerCase().includes("admin"))) {
-                    window.location.href = "panel.html";
-                } else {
-                    window.location.href = "panel-warsztatu.html";
-                }
 
                 // INTELIGENTNE PRZEKIEROWANIE
-                if (response.role === "admin" || response.isAdmin === true) {
-                    window.location.href = "panel.html";
-                }
-                else if (response.email && response.email.toLowerCase().includes("admin")) {
-                    window.location.href = "panel.html";
-                }
-                else {
-                    window.location.href = "panel-warsztatu.html";
-                }
+                // Czekamy chwilę, żeby token na pewno się zapisał w storage
+                setTimeout(() => {
+                    if (response.role === "admin" || response.isAdmin === true || (response.email && response.email.includes("admin"))) {
+                        window.location.href = "panel.html";
+                    } else {
+                        window.location.href = "panel-warsztatu.html";
+                    }
+                }, 500);
 
             } catch (error) {
-                const message = error.details?.message || 'Niepoprawny e-mail lub hasło.';
+                console.error(error);
+                const message = error.details?.message || error.message || 'Niepoprawny e-mail lub hasło.';
                 setFeedback(feedback, message, 'error');
             } finally {
                 submitBtn?.removeAttribute('disabled');
