@@ -38,7 +38,7 @@
                 <span class="font-medium text-sm">Pulpit CRM</span>
             </button>
 
-            <button data-section="reception" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition group">
+            <button id="btn-new-reception" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition group">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 <span class="font-medium text-sm">Nowe Przyjęcie</span>
             </button>
@@ -321,46 +321,212 @@
                     </div>
                     
                     <!-- FOOTER (Sticky) -->
-<!-- PASEK AKCJI - WERSJA PERFECT ALIGNMENT -->
-<!-- Zmiana kluczowa: md:left-64 (odsuwamy go o szerokość sidebara) -->
-<div id="reception-action-bar" class="hidden fixed bottom-6 left-0 md:left-64 right-0 z-40 px-6 sm:px-8 pointer-events-none">
+<!-- ✅ FIX OSTATECZNY: Pasek odsunięty od Sidebara -->
+<!-- Zmiana: md:left-64 (zaczyna się za menu) oraz usunięte tło z wrappera -->
+<div id="reception-action-bar" class="hidden fixed bottom-6 right-0 z-50 px-4 pointer-events-none left-0 md:left-64 transition-all duration-300">
     
-    <div class="pointer-events-auto mx-auto w-full max-w-7xl 
-                bg-white/70 backdrop-blur-md border border-white/40 shadow-2xl 
-                rounded-2xl p-3 sm:p-4 
-                flex justify-between items-center 
-                transition-all duration-300 ease-in-out
-                hover:bg-white hover:border-slate-200 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]">
+    <!-- Kontener centrujący kartę -->
+    <div class="w-full h-full flex justify-center items-end pb-1">
         
-        <!-- Lewa strona -->
-        <div class="flex items-center gap-4 sm:gap-6 pl-2">
-            <div class="hidden md:block">
-                <div class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Status</div>
-                <div class="text-sm font-bold text-slate-800">Nowe Przyjęcie</div>
-            </div>
-            <div class="text-xs text-slate-500 font-medium border-l pl-4 sm:pl-6 border-slate-300/50 hidden sm:block">
-                <span class="opacity-75 group-hover:opacity-100 transition-opacity">
-                    * Wymagane: VIN, Klient, Opis
-                </span>
-            </div>
-        </div>
-
-        <!-- Prawa strona -->
-        <div class="flex gap-3">
-            <button class="px-4 py-2 sm:px-5 sm:py-2.5 text-slate-600 font-bold text-xs sm:text-sm hover:bg-slate-100/80 rounded-lg transition">
-                Anuluj
-            </button>
+        <!-- WŁAŚCIWA KARTA (Tylko to ma być białe!) -->
+        <!-- pointer-events-auto: żeby dało się klikać -->
+        <div class="pointer-events-auto w-full max-w-5xl 
+                    bg-white/90 backdrop-blur-xl border border-slate-200 shadow-2xl 
+                    rounded-2xl p-3 sm:p-4 
+                    flex justify-between items-center 
+                    transform transition-all duration-300 hover:-translate-y-1">
             
-            <button id="btn-save-reception" class="px-5 py-2 sm:px-6 sm:py-2.5 bg-blue-600 text-white font-bold text-xs sm:text-sm rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-600/20 transition flex items-center gap-2 transform active:scale-95">
-                <span>OTWÓRZ ZLECENIE</span>
-                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                </svg>
-            </button>
-        </div>
+            <!-- Lewa strona -->
+            <div class="flex items-center gap-6 pl-2">
+                <div class="hidden md:block">
+                    <div class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Status</div>
+                    <div class="text-sm font-bold text-slate-800">Nowe Przyjęcie</div>
+                </div>
+                <div class="text-xs text-slate-500 font-medium border-l pl-6 border-slate-300 hidden sm:block">
+                    <span class="text-slate-400 mr-1">* Wymagane:</span> 
+                    <span class="font-bold text-slate-600">VIN, Klient, Opis</span>
+                </div>
+            </div>
 
+            <!-- Prawa strona -->
+            <div class="flex gap-3">
+                <button class="px-5 py-2.5 text-slate-500 font-bold text-xs sm:text-sm hover:bg-slate-50 hover:text-slate-700 rounded-xl transition">
+                    Anuluj
+                </button>
+                
+                <button id="btn-save-reception" class="px-6 py-2.5 bg-blue-600 text-white font-bold text-xs sm:text-sm rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition flex items-center gap-2 transform active:scale-95">
+                    <span>OTWÓRZ ZLECENIE</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </button>
+            </div>
+
+        </div>
     </div>
 </div>
+                </div>
+           </section>
+
+            <!-- B. MODUŁ PRZYJĘCIA - DOMYŚLNIE UKRYTY -->
+            <section id="view-reception" class="view-section hidden">
+                <!-- Kontener Przyjęcia PRO -->
+                <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 pb-20">
+                    
+                    <!-- LEWA KOLUMNA (Rozdzielone sekcje) -->
+                    <div class="lg:col-span-7 space-y-6">
+                        
+                        <!-- 1. DANE POJAZDU -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-sm font-bold">1</span>
+                                Dane Pojazdu
+                            </h3>
+                            
+                            <div class="grid grid-cols-12 gap-4">
+                                <!-- Wiersz 1: VIN i Rejestracja -->
+                                <div class="col-span-12 md:col-span-7">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Numer VIN <span class="text-red-500">*</span></label>
+                                    <div class="flex gap-2">
+                                        <input type="text" id="input-vin" placeholder="Wpisz pełny VIN (17 znaków)" class="flex-1 p-3 border border-slate-300 rounded-lg font-mono uppercase focus:border-blue-500 outline-none transition">
+                                        <button id="btn-decode-vin" class="bg-slate-800 text-white px-4 rounded-lg hover:bg-slate-700 transition font-medium text-sm whitespace-nowrap">Szukaj (API)</button>
+                                    </div>
+                                    <p id="vin-error" class="text-xs text-red-500 mt-1 hidden"></p>
+                                </div>
+                                <div class="col-span-12 md:col-span-5">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nr Rejestracyjny <span class="text-red-500">*</span></label>
+                                    <input type="text" id="input-plate" placeholder="WPR..." class="w-full p-3 border border-slate-300 rounded-lg uppercase font-bold text-slate-800 focus:border-blue-500 outline-none transition">
+                                </div>
+
+                                <!-- Wiersz 2: Marka i Model -->
+                                <div class="col-span-12 md:col-span-6">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Marka</label>
+                                    <input type="text" id="input-brand" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-slate-600 font-medium" readonly>
+                                </div>
+                                <div class="col-span-12 md:col-span-6">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Model</label>
+                                    <input type="text" id="input-model" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-slate-600 font-medium" readonly>
+                                </div>
+
+                                <!-- Wiersz 3: Dane Techniczne -->
+                                <div class="col-span-12 md:col-span-6">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Przebieg (km) <span class="text-red-500">*</span></label>
+                                    <input type="number" id="input-mileage" placeholder="0" class="w-full p-3 border border-slate-300 rounded-lg focus:border-blue-500 outline-none transition">
+                                </div>
+                                <div class="col-span-12 md:col-span-6">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Data 1. Rej.</label>
+                                    <input type="date" id="input-reg-date" class="w-full p-3 border border-slate-300 rounded-lg focus:border-blue-500 outline-none transition text-slate-600">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. DANE KLIENTA -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                    <span class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center text-sm font-bold">2</span>
+                                    Dane Klienta
+                                </h3>
+                                <button class="text-xs text-blue-600 hover:underline font-medium">Szukaj w bazie</button>
+                            </div>
+                            
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="col-span-12 md:col-span-6">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Imię i Nazwisko / Firma <span class="text-red-500">*</span></label>
+                                    <input type="text" id="input-client-name" class="w-full p-3 border border-slate-300 rounded-lg focus:border-indigo-500 outline-none transition">
+                                </div>
+                                <div class="col-span-12 md:col-span-6">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Telefon <span class="text-red-500">*</span></label>
+                                    <input type="tel" id="input-client-phone" class="w-full p-3 border border-slate-300 rounded-lg focus:border-indigo-500 outline-none transition">
+                                </div>
+                                <div class="col-span-12">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Email (do raportów)</label>
+                                    <input type="email" id="input-client-email" class="w-full p-3 border border-slate-300 rounded-lg focus:border-indigo-500 outline-none transition">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. ZLECENIE -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <span class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center text-sm font-bold">3</span>
+                                Zlecenie Naprawy
+                            </h3>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <label class="cursor-pointer select-none">
+                                    <input type="checkbox" class="peer sr-only service-tag" value="Wymiana Oleju">
+                                    <span class="px-3 py-1 rounded-full border border-slate-300 text-slate-500 text-sm peer-checked:bg-emerald-600 peer-checked:text-white peer-checked:border-emerald-600 transition">🛢️ Olej</span>
+                                </label>
+                                <label class="cursor-pointer select-none">
+                                    <input type="checkbox" class="peer sr-only service-tag" value="Przegląd">
+                                    <span class="px-3 py-1 rounded-full border border-slate-300 text-slate-500 text-sm peer-checked:bg-emerald-600 peer-checked:text-white peer-checked:border-emerald-600 transition">🔍 Przegląd</span>
+                                </label>
+                                <label class="cursor-pointer select-none">
+                                    <input type="checkbox" class="peer sr-only service-tag" value="Rozrząd">
+                                    <span class="px-3 py-1 rounded-full border border-slate-300 text-slate-500 text-sm peer-checked:bg-emerald-600 peer-checked:text-white peer-checked:border-emerald-600 transition">⚙️ Rozrząd</span>
+                                </label>
+                                <label class="cursor-pointer select-none">
+                                    <input type="checkbox" class="peer sr-only service-tag" value="Hamulce">
+                                    <span class="px-3 py-1 rounded-full border border-slate-300 text-slate-500 text-sm peer-checked:bg-emerald-600 peer-checked:text-white peer-checked:border-emerald-600 transition">💿 Hamulce</span>
+                                </label>
+                            </div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Opis Usterki / Uwagi</label>
+                            <textarea id="input-description" rows="3" placeholder="Co się dzieje z autem?" class="w-full p-4 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-100 focus:border-emerald-500 outline-none resize-none"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- PRAWA KOLUMNA (Mapa) -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-full flex flex-col">
+                            <h3 class="text-lg font-bold text-slate-800 mb-2 flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-8 h-8 bg-red-100 text-red-600 rounded-lg flex items-center justify-center text-sm font-bold">3</span>
+                                    Karoseria
+                                </div>
+                                <button id="btn-clear-damage" class="text-xs text-slate-400 hover:text-red-500">Wyczyść</button>
+                            </h3>
+                            <p class="text-xs text-slate-400 mb-6">Zaznacz elementy uszkodzone (Rysy, Wgniecenia).</p>
+
+                            <div class="relative flex-1 flex items-center justify-center p-2">
+                                <svg viewBox="0 0 300 440" class="w-full h-auto drop-shadow-xl" id="car-map-svg">
+                                    <defs>
+                                        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                                            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.1"/>
+                                        </filter>
+                                    </defs>
+                                    <!-- Przód -->
+                                    <path d="M70 40 Q150 20 230 40 L230 60 Q150 80 70 60 Z" fill="white" stroke="#cbd5e1" class="damage-zone hover:fill-red-100 cursor-pointer transition" data-part="Zderzak Przód" />
+                                    <path d="M75 65 L225 65 L210 130 L90 130 Z" fill="white" stroke="#cbd5e1" class="damage-zone hover:fill-red-100 cursor-pointer transition" data-part="Maska" />
+                                    <path d="M90 135 L210 135 L200 160 L100 160 Z" fill="#e0f2fe" stroke="#cbd5e1" class="damage-zone hover:fill-blue-200 cursor-pointer transition" data-part="Szyba Czołowa" />
+                                    <path d="M100 165 L200 165 L200 260 L100 260 Z" fill="white" stroke="#cbd5e1" class="damage-zone hover:fill-red-100 cursor-pointer transition" data-part="Dach" />
+                                    <path d="M100 265 L200 265 L210 290 L90 290 Z" fill="#e0f2fe" stroke="#cbd5e1" class="damage-zone hover:fill-blue-200 cursor-pointer transition" data-part="Szyba Tył" />
+                                    <path d="M90 295 L210 295 L225 360 L75 360 Z" fill="white" stroke="#cbd5e1" class="damage-zone hover:fill-red-100 cursor-pointer transition" data-part="Klapa Bagażnika" />
+                                    <path d="M70 365 Q150 385 230 365 L230 395 Q150 415 70 395 Z" fill="white" stroke="#cbd5e1" class="damage-zone hover:fill-red-100 cursor-pointer transition" data-part="Zderzak Tył" />
+                                    <!-- Boki Lewe -->
+                                    <path d="M40 70 L65 70 L65 140 L35 140 Z" fill="white" stroke="#cbd5e1" class="damage-zone hover:fill-red-100 cursor-pointer transition" data-part="Błotnik Lewy Przód" />
+                                    <path d="M30 145 L65 145 L65 240 L30 240 Z" fill="white" stroke="#cbd5e1" class="damage-zone hover:fill-red-100 cursor-pointer transition" data-part="Drzwi Lewe Przód" />
+                                    <path d="M30 245 L65 245 L65 340 L35 340 Z" fill="white" stroke="#cbd5e1" class="damage-zone hover:fill-red-100 cursor-pointer transition" data-part="Drzwi Lewe Tył" />
+                                    <path d="M40 345 L65 345 L65 380 L50 380 Z" fill="white" stroke="#cbd5e1" class="damage-zone hover:fill-red-100 cursor-pointer transition" data-part="Błotnik Lewy Tył" />
+                                    <!-- Boki Prawe -->
+                                    <path d="M235 70 L260 70 L265 140 L235 140 Z" fill="white" stroke="#cbd5e1" class="damage-zone hover:fill-red-100 cursor-pointer transition" data-part="Błotnik Prawy Przód" />
+                                    <path d="M235 145 L270 145 L270 240 L235 240 Z" fill="white" stroke="#cbd5e1" class="damage-zone hover:fill-red-100 cursor-pointer transition" data-part="Drzwi Prawe Przód" />
+                                    <path d="M235 245 L270 245 L270 340 L235 340 Z" fill="white" stroke="#cbd5e1" class="damage-zone hover:fill-red-100 cursor-pointer transition" data-part="Drzwi Prawe Tył" />
+                                    <path d="M235 345 L260 345 L250 380 L235 380 Z" fill="white" stroke="#cbd5e1" class="damage-zone hover:fill-red-100 cursor-pointer transition" data-part="Błotnik Prawy Tył" />
+                                    <!-- Lusterka -->
+                                    <rect x="15" y="145" width="15" height="10" rx="2" fill="white" stroke="#cbd5e1" class="damage-zone hover:fill-red-100 cursor-pointer" data-part="Lusterko Lewe" />
+                                    <rect x="270" y="145" width="15" height="10" rx="2" fill="white" stroke="#cbd5e1" class="damage-zone hover:fill-red-100 cursor-pointer" data-part="Lusterko Prawe" />
+                                </svg>
+                            </div>
+
+                            <div class="mt-4 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                <h4 class="text-[10px] font-bold text-slate-400 uppercase mb-2">Lista uszkodzeń:</h4>
+                                <ul id="damage-list" class="text-xs space-y-1 max-h-32 overflow-y-auto custom-scrollbar">
+                                    <li class="italic text-slate-400">Pojazd bez zastrzeżeń</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
             </section>
 
@@ -377,52 +543,46 @@
         </div>
     </main>
 
-    <!-- Mózg JS -->
-     <!-- INTELIGENTNY PASEK AKCJI (Glassmorphism) -->
-<!-- Wrapper pozycjonujący (uwzględnia sidebar left-64) -->
-<div class="fixed bottom-6 left-0 md:left-64 right-0 z-40 px-6 sm:px-8 pointer-events-none">
-    
-    <!-- Właściwy pasek (Karta) -->
-    <!-- Używamy max-w-7xl żeby pasował idealnie do reszty layoutu -->
-    <!-- transition-all: odpowiada za płynne przejście z przeźroczystości do bieli -->
-    <div id="sticky-action-bar" 
-         class="pointer-events-auto mx-auto w-full max-w-7xl 
-                bg-white/70 backdrop-blur-md border border-white/40 shadow-2xl 
-                rounded-2xl p-3 sm:p-4 
-                flex justify-between items-center 
-                transition-all duration-300 ease-in-out
-                hover:bg-white hover:border-slate-200 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]">
+    <!-- PASEK GLOBALNY (Z poprawionym ID i klasą hidden) -->
+    <div id="reception-action-bar" class="hidden fixed bottom-6 left-0 md:left-64 right-0 z-50 px-6 sm:px-8 pointer-events-none transition-all duration-300">
         
-        <!-- Lewa strona -->
-        <div class="flex items-center gap-4 sm:gap-6 pl-2">
-            <div class="hidden md:block">
-                <div class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Status</div>
-                <div class="text-sm font-bold text-slate-800">Nowe Przyjęcie</div>
-            </div>
-            <!-- Info z lekkim zanikaniem tekstu gdy pasek jest szklany -->
-            <div class="text-xs text-slate-500 font-medium border-l pl-4 sm:pl-6 border-slate-300/50 hidden sm:block">
-                <span class="opacity-75 group-hover:opacity-100 transition-opacity">
-                    * Wymagane: VIN, Klient, Opis
-                </span>
-            </div>
-        </div>
-
-        <!-- Prawa strona (Przyciski) -->
-        <div class="flex gap-3">
-            <button class="px-4 py-2 sm:px-5 sm:py-2.5 text-slate-600 font-bold text-xs sm:text-sm hover:bg-slate-100/80 rounded-lg transition">
-                Anuluj
-            </button>
+        <div class="pointer-events-auto mx-auto w-full max-w-7xl 
+                    bg-white/70 backdrop-blur-md border border-white/40 shadow-2xl 
+                    rounded-2xl p-3 sm:p-4 
+                    flex justify-between items-center 
+                    transition-all duration-300 ease-in-out
+                    hover:bg-white hover:border-slate-200 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]">
             
-            <button id="btn-save-reception" class="px-5 py-2 sm:px-6 sm:py-2.5 bg-blue-600 text-white font-bold text-xs sm:text-sm rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-600/20 transition flex items-center gap-2 transform active:scale-95">
-                <span>OTWÓRZ ZLECENIE</span>
-                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                </svg>
-            </button>
-        </div>
+            <!-- Lewa strona -->
+            <div class="flex items-center gap-4 sm:gap-6 pl-2">
+                <div class="hidden md:block">
+                    <div class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Status</div>
+                    <div class="text-sm font-bold text-slate-800">Nowe Przyjęcie</div>
+                </div>
+                <div class="text-xs text-slate-500 font-medium border-l pl-4 sm:pl-6 border-slate-300/50 hidden sm:block">
+                    <span class="opacity-75 group-hover:opacity-100 transition-opacity">
+                        * Wymagane: VIN, Klient, Opis
+                    </span>
+                </div>
+            </div>
 
+            <!-- Prawa strona -->
+            <div class="flex gap-3">
+                <button class="px-4 py-2 sm:px-5 sm:py-2.5 text-slate-600 font-bold text-xs sm:text-sm hover:bg-slate-100/80 rounded-lg transition">
+                    Anuluj
+                </button>
+                
+                <button id="btn-save-reception" class="px-5 py-2 sm:px-6 sm:py-2.5 bg-blue-600 text-white font-bold text-xs sm:text-sm rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-600/20 transition flex items-center gap-2 transform active:scale-95">
+                    <span>OTWÓRZ ZLECENIE</span>
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </button>
+            </div>
+
+        </div>
     </div>
-</div>
+
     <script type="module" src="js/panel-warsztatu/main.js"></script>
 </body>
 </html>
