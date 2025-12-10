@@ -321,16 +321,46 @@
                     </div>
                     
                     <!-- FOOTER (Sticky) -->
-                    <div class="lg:col-span-12 bg-white p-4 rounded-xl border border-slate-200 flex justify-between items-center sticky bottom-4 shadow-2xl z-20">
-                        <div class="text-xs text-slate-400">* Wymagane VIN, Klient i Opis</div>
-                        <div class="flex gap-3">
-                            <button class="px-6 py-3 text-slate-600 font-bold text-sm hover:bg-slate-100 rounded-lg transition">Anuluj</button>
-                            <button id="btn-save-reception" class="px-8 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition flex items-center gap-2">
-                                <span>OTWÓRZ ZLECENIE</span>
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                            </button>
-                        </div>
-                    </div>
+<!-- PASEK AKCJI - WERSJA PERFECT ALIGNMENT -->
+<!-- Zmiana kluczowa: md:left-64 (odsuwamy go o szerokość sidebara) -->
+<div id="reception-action-bar" class="hidden fixed bottom-6 left-0 md:left-64 right-0 z-40 px-6 sm:px-8 pointer-events-none">
+    
+    <div class="pointer-events-auto mx-auto w-full max-w-7xl 
+                bg-white/70 backdrop-blur-md border border-white/40 shadow-2xl 
+                rounded-2xl p-3 sm:p-4 
+                flex justify-between items-center 
+                transition-all duration-300 ease-in-out
+                hover:bg-white hover:border-slate-200 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]">
+        
+        <!-- Lewa strona -->
+        <div class="flex items-center gap-4 sm:gap-6 pl-2">
+            <div class="hidden md:block">
+                <div class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Status</div>
+                <div class="text-sm font-bold text-slate-800">Nowe Przyjęcie</div>
+            </div>
+            <div class="text-xs text-slate-500 font-medium border-l pl-4 sm:pl-6 border-slate-300/50 hidden sm:block">
+                <span class="opacity-75 group-hover:opacity-100 transition-opacity">
+                    * Wymagane: VIN, Klient, Opis
+                </span>
+            </div>
+        </div>
+
+        <!-- Prawa strona -->
+        <div class="flex gap-3">
+            <button class="px-4 py-2 sm:px-5 sm:py-2.5 text-slate-600 font-bold text-xs sm:text-sm hover:bg-slate-100/80 rounded-lg transition">
+                Anuluj
+            </button>
+            
+            <button id="btn-save-reception" class="px-5 py-2 sm:px-6 sm:py-2.5 bg-blue-600 text-white font-bold text-xs sm:text-sm rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-600/20 transition flex items-center gap-2 transform active:scale-95">
+                <span>OTWÓRZ ZLECENIE</span>
+                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+            </button>
+        </div>
+
+    </div>
+</div>
                 </div>
             </section>
 
@@ -348,6 +378,51 @@
     </main>
 
     <!-- Mózg JS -->
+     <!-- INTELIGENTNY PASEK AKCJI (Glassmorphism) -->
+<!-- Wrapper pozycjonujący (uwzględnia sidebar left-64) -->
+<div class="fixed bottom-6 left-0 md:left-64 right-0 z-40 px-6 sm:px-8 pointer-events-none">
+    
+    <!-- Właściwy pasek (Karta) -->
+    <!-- Używamy max-w-7xl żeby pasował idealnie do reszty layoutu -->
+    <!-- transition-all: odpowiada za płynne przejście z przeźroczystości do bieli -->
+    <div id="sticky-action-bar" 
+         class="pointer-events-auto mx-auto w-full max-w-7xl 
+                bg-white/70 backdrop-blur-md border border-white/40 shadow-2xl 
+                rounded-2xl p-3 sm:p-4 
+                flex justify-between items-center 
+                transition-all duration-300 ease-in-out
+                hover:bg-white hover:border-slate-200 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]">
+        
+        <!-- Lewa strona -->
+        <div class="flex items-center gap-4 sm:gap-6 pl-2">
+            <div class="hidden md:block">
+                <div class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Status</div>
+                <div class="text-sm font-bold text-slate-800">Nowe Przyjęcie</div>
+            </div>
+            <!-- Info z lekkim zanikaniem tekstu gdy pasek jest szklany -->
+            <div class="text-xs text-slate-500 font-medium border-l pl-4 sm:pl-6 border-slate-300/50 hidden sm:block">
+                <span class="opacity-75 group-hover:opacity-100 transition-opacity">
+                    * Wymagane: VIN, Klient, Opis
+                </span>
+            </div>
+        </div>
+
+        <!-- Prawa strona (Przyciski) -->
+        <div class="flex gap-3">
+            <button class="px-4 py-2 sm:px-5 sm:py-2.5 text-slate-600 font-bold text-xs sm:text-sm hover:bg-slate-100/80 rounded-lg transition">
+                Anuluj
+            </button>
+            
+            <button id="btn-save-reception" class="px-5 py-2 sm:px-6 sm:py-2.5 bg-blue-600 text-white font-bold text-xs sm:text-sm rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-600/20 transition flex items-center gap-2 transform active:scale-95">
+                <span>OTWÓRZ ZLECENIE</span>
+                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+            </button>
+        </div>
+
+    </div>
+</div>
     <script type="module" src="js/panel-warsztatu/main.js"></script>
 </body>
 </html>

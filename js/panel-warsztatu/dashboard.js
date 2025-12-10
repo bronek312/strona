@@ -1,6 +1,12 @@
 import { api } from './api.js';
 
 export function initDashboard() {
+    // 1. CZYSZCZENIE UI: Ukryj pasek recepcji (jeśli został po innym widoku)
+    const receptionBar = document.getElementById('reception-action-bar'); // lub ID jakie nadałeś wrapperowi paska
+    if (receptionBar) {
+        receptionBar.classList.add('hidden');
+    }
+
     console.log('🖥️ Pulpit: Start (Kanban Ready)');
 
     // Mock Data - symulacja aut na warsztacie
@@ -18,17 +24,26 @@ export function initDashboard() {
 
 function renderKanban(orders) {
     // Czyścimy kolumny
-    document.getElementById('col-pending').innerHTML = '';
-    document.getElementById('col-progress').innerHTML = '';
-    document.getElementById('col-done').innerHTML = '';
+    const colPending = document.getElementById('col-pending');
+    const colProgress = document.getElementById('col-progress');
+    const colDone = document.getElementById('col-done');
+
+    // Zabezpieczenie przed błędem, gdybyśmy byli na innym widoku bez kolumn
+    if (!colPending || !colProgress || !colDone) return;
+
+    colPending.innerHTML = '';
+    colProgress.innerHTML = '';
+    colDone.innerHTML = '';
 
     // Liczniki
     const counts = { pending: 0, progress: 0, done: 0 };
 
     orders.forEach(order => {
-        counts[order.status]++;
-        const card = createCard(order);
-        document.getElementById(`col-${order.status}`).appendChild(card);
+        if (counts[order.status] !== undefined) {
+            counts[order.status]++;
+            const card = createCard(order);
+            document.getElementById(`col-${order.status}`).appendChild(card);
+        }
     });
 
     updateCounts(counts);
@@ -115,16 +130,27 @@ function initDragAndDrop() {
 }
 
 function updateCounts(counts) {
-    document.getElementById('count-pending').textContent = counts.pending;
-    document.getElementById('count-progress').textContent = counts.progress;
-    document.getElementById('count-done').textContent = counts.done;
+    const elPending = document.getElementById('count-pending');
+    if(elPending) elPending.textContent = counts.pending;
+    
+    const elProgress = document.getElementById('count-progress');
+    if(elProgress) elProgress.textContent = counts.progress;
+    
+    const elDone = document.getElementById('count-done');
+    if(elDone) elDone.textContent = counts.done;
 }
 
 function updateCountsFromDOM() {
-    const counts = {
-        pending: document.getElementById('col-pending').children.length,
-        progress: document.getElementById('col-progress').children.length,
-        done: document.getElementById('col-done').children.length
-    };
-    updateCounts(counts);
+    const colPending = document.getElementById('col-pending');
+    const colProgress = document.getElementById('col-progress');
+    const colDone = document.getElementById('col-done');
+
+    if (colPending && colProgress && colDone) {
+        const counts = {
+            pending: colPending.children.length,
+            progress: colProgress.children.length,
+            done: colDone.children.length
+        };
+        updateCounts(counts);
+    }
 }
