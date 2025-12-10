@@ -319,44 +319,34 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- FOOTER (Sticky) -->
-<!-- ✅ FIX OSTATECZNY: Pasek odsunięty od Sidebara -->
-<!-- Zmiana: md:left-64 (zaczyna się za menu) oraz usunięte tło z wrappera -->
-<div id="reception-action-bar" class="hidden fixed bottom-6 right-0 z-50 px-4 pointer-events-none left-0 md:left-64 transition-all duration-300">
-    
-    <!-- Kontener centrujący kartę -->
-    <div class="w-full h-full flex justify-center items-end pb-1">
+
+           <div id="reception-action-bar" class="hidden fixed bottom-6 left-0 md:left-64 right-0 z-50 px-6 sm:px-8 pointer-events-none transition-all duration-300">
         
-        <!-- WŁAŚCIWA KARTA (Tylko to ma być białe!) -->
-        <!-- pointer-events-auto: żeby dało się klikać -->
-        <div class="pointer-events-auto w-full max-w-5xl 
-                    bg-white/90 backdrop-blur-xl border border-slate-200 shadow-2xl 
+        <div class="pointer-events-auto mx-auto w-full max-w-7xl 
+                    bg-white/70 backdrop-blur-md border border-white/40 shadow-2xl 
                     rounded-2xl p-3 sm:p-4 
                     flex justify-between items-center 
-                    transform transition-all duration-300 hover:-translate-y-1">
+                    transition-all duration-300 ease-in-out
+                    hover:bg-white hover:border-slate-200 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]">
             
             <!-- Lewa strona -->
-            <div class="flex items-center gap-6 pl-2">
+            <div class="flex items-center gap-4 sm:gap-6 pl-2">
                 <div class="hidden md:block">
                     <div class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Status</div>
                     <div class="text-sm font-bold text-slate-800">Nowe Przyjęcie</div>
                 </div>
-                <div class="text-xs text-slate-500 font-medium border-l pl-6 border-slate-300 hidden sm:block">
-                    <span class="text-slate-400 mr-1">* Wymagane:</span> 
-                    <span class="font-bold text-slate-600">VIN, Klient, Opis</span>
+                <div class="text-xs text-slate-500 font-medium border-l pl-4 sm:pl-6 border-slate-300/50 hidden sm:block">
+                    <span class="opacity-75 group-hover:opacity-100 transition-opacity">
+                        * Wymagane: VIN, Klient, Opis
+                    </span>
                 </div>
             </div>
 
-            <!-- Prawa strona -->
-            <div class="flex gap-3">
-                <button class="px-5 py-2.5 text-slate-500 font-bold text-xs sm:text-sm hover:bg-slate-50 hover:text-slate-700 rounded-xl transition">
-                    Anuluj
-                </button>
+          
                 
-                <button id="btn-save-reception" class="px-6 py-2.5 bg-blue-600 text-white font-bold text-xs sm:text-sm rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition flex items-center gap-2 transform active:scale-95">
+                <button id="btn-save-reception" class="px-5 py-2 sm:px-6 sm:py-2.5 bg-blue-600 text-white font-bold text-xs sm:text-sm rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-600/20 transition flex items-center gap-2 transform active:scale-95">
                     <span>OTWÓRZ ZLECENIE</span>
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                     </svg>
                 </button>
@@ -364,9 +354,7 @@
 
         </div>
     </div>
-</div>
-                </div>
-           </section>
+
 
             <!-- B. MODUŁ PRZYJĘCIA - DOMYŚLNIE UKRYTY -->
             <section id="view-reception" class="view-section hidden">
@@ -543,45 +531,6 @@
         </div>
     </main>
 
-    <!-- PASEK GLOBALNY (Z poprawionym ID i klasą hidden) -->
-    <div id="reception-action-bar" class="hidden fixed bottom-6 left-0 md:left-64 right-0 z-50 px-6 sm:px-8 pointer-events-none transition-all duration-300">
-        
-        <div class="pointer-events-auto mx-auto w-full max-w-7xl 
-                    bg-white/70 backdrop-blur-md border border-white/40 shadow-2xl 
-                    rounded-2xl p-3 sm:p-4 
-                    flex justify-between items-center 
-                    transition-all duration-300 ease-in-out
-                    hover:bg-white hover:border-slate-200 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]">
-            
-            <!-- Lewa strona -->
-            <div class="flex items-center gap-4 sm:gap-6 pl-2">
-                <div class="hidden md:block">
-                    <div class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Status</div>
-                    <div class="text-sm font-bold text-slate-800">Nowe Przyjęcie</div>
-                </div>
-                <div class="text-xs text-slate-500 font-medium border-l pl-4 sm:pl-6 border-slate-300/50 hidden sm:block">
-                    <span class="opacity-75 group-hover:opacity-100 transition-opacity">
-                        * Wymagane: VIN, Klient, Opis
-                    </span>
-                </div>
-            </div>
-
-            <!-- Prawa strona -->
-            <div class="flex gap-3">
-                <button class="px-4 py-2 sm:px-5 sm:py-2.5 text-slate-600 font-bold text-xs sm:text-sm hover:bg-slate-100/80 rounded-lg transition">
-                    Anuluj
-                </button>
-                
-                <button id="btn-save-reception" class="px-5 py-2 sm:px-6 sm:py-2.5 bg-blue-600 text-white font-bold text-xs sm:text-sm rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-600/20 transition flex items-center gap-2 transform active:scale-95">
-                    <span>OTWÓRZ ZLECENIE</span>
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                    </svg>
-                </button>
-            </div>
-
-        </div>
-    </div>
 
     <script type="module" src="js/panel-warsztatu/main.js"></script>
 </body>
