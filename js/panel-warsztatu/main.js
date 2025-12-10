@@ -1,22 +1,47 @@
-// js/panel-warsztatu/main.js
-
-// Importujemy z tego samego folderu, więc używamy "./"
-import { checkAuth, setupLogout } from './auth.js';
-import { initNavigation } from './navigation.js';
-import { initProfile } from './profile.js';
-import { initReports } from './reports.js';
-import { initInvoices } from './invoices.js';
-import { initParts } from './parts.js';
+// Importy modułów (na razie puste, ale gotowe do pracy)
+ import { initDashboard } from './dashboard.js';
+ import { initReception } from './reception.js';
+// import { initCatalog } from './catalog.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Najpierw sprawdzamy czy user jest zalogowany
-    if (!checkAuth()) return;
+    console.log('🚀 Warsztat+ Enterprise: System Start');
 
-    // Uruchamiamy moduły
-    setupLogout();
-    initNavigation();
-    initProfile();
-    initReports();
-    initInvoices();
-    initParts();
+    const navButtons = document.querySelectorAll('.nav-item');
+    const views = document.querySelectorAll('.view-section');
+    const pageTitle = document.getElementById('page-title');
+
+    // Obsługa Nawigacji
+    navButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // 1. Aktywne menu
+            navButtons.forEach(b => b.classList.remove('active', 'bg-blue-600', 'text-white'));
+            navButtons.forEach(b => b.classList.add('text-slate-400'));
+            
+            btn.classList.add('active'); // Style CSS załatwią kolor (zdefiniowane w HTML)
+            btn.classList.remove('text-slate-400');
+
+            // 2. Przełączanie widoku
+            const sectionId = btn.dataset.section;
+            switchView(sectionId);
+            
+            // 3. Zmiana tytułu
+            const titleText = btn.querySelector('span').innerText;
+            pageTitle.textContent = titleText;
+        });
+    });
+
+       function switchView(sectionId) {
+        views.forEach(v => v.classList.add('hidden'));
+        
+        const activeView = document.getElementById(`view-${sectionId}`);
+        if (activeView) {
+            activeView.classList.remove('hidden');
+
+            // Lazy Loading modułów
+            if (sectionId === 'reception') initReception();
+            // if (sectionId === 'dashboard') initDashboard();
+        }
+    }
 });

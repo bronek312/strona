@@ -1,35 +1,63 @@
 import { db } from '../db.js';
 
+// Wyszukiwanie części w lokalnej bazie
 export function searchPartsInWholesaler(query) {
-  // Symulacja danych
-  const mockDb = [
-    { id: 'HAM-001', name: 'Klocki hamulcowe przód (TRW)', index: 'GDB1307', price: 145.00, stock: 'Dostępne' },
-    { id: 'FIL-023', name: 'Filtr oleju (Mann)', index: 'W712/95', price: 35.50, stock: 'Duża ilość' },
-    { id: 'AMO-999', name: 'Amortyzator tył (Sachs)', index: '313 000', price: 210.00, stock: '24h' },
-    { id: 'WIC-500', name: 'Wycieraczki Bosch Aerotwin', index: '3 397 007', price: 95.00, stock: 'Dostępne' },
-    { id: 'ROZ-123', name: 'Zestaw paska rozrządu', index: 'CT1139K2', price: 450.00, stock: 'Na zamówienie' }
-  ];
-
   if (!query) return [];
   
-  const lowerQuery = query.toLowerCase();
-  return mockDb.filter(part => 
-    part.name.toLowerCase().includes(lowerQuery) || 
-    part.index.toLowerCase().includes(lowerQuery)
-  );
+  try {
+    const lowerQuery = `%${query.toLowerCase()}%`;
+    
+    // better-sqlite3 używa .prepare() i .all()
+    const parts = db.prepare(`
+      SELECT * FROM parts 
+      WHERE lower(name) LIKE ? OR lower(code) LIKE ? 
+      LIMIT 20
+    `).all(lowerQuery, lowerQuery);
+
+    return parts;
+  } catch (err) {
+    console.error('[DB ERROR] Search parts:', err.message);
+    throw new Error('Błąd podczas szukania części');
+  }
 }
 
+// Tworzenie zamówienia
 export function createOrder(workshopId, partData) {
-  const now = new Date().toISOString();
-  
-  const order = {
-    id: `ORD-${Date.now()}`,
-    workshopId,
-    ...partData,
-    status: 'Przyjęto do realizacji',
-    createdAt: now
-  };
+  if (!workshopId || !partData) {
+    throw new Error('Brak wymaganych danych do zamówienia');
+  }
 
-  console.log(`[HURTOWNIA] Nowe zamówienie od warsztatu ${workshopId}:`, partData);
-  return order;
+  try {
+    // Transaction - operacja atomowa (bezpieczna)
+    const insertOrder = db.transaction(() => {
+        const stmt = db.prepare(`
+            INSERT INTO orders (workshop_id, part_name, part_index, price, status)
+            VALUES (?, ?, ?, ?, 'pending')
+        `);
+        
+        const info = stmt.run(
+            workshopId,
+            partData.name,
+            partData.index || '',
+            partData.price
+        );
+        
+        // Zwracamy nowo utworzone zamówienie
+        return {
+            id: info.lastInsertRowid,
+            workshopId,
+            ...partData,
+            status: 'pending',
+            createdAt: new Date().toISOString()
+        };
+    });
+
+    const newOrder = insertOrder();
+    console.log(`[ZAMÓWIENIE] Utworzono zamówienie ID: ${newOrder.id} dla warsztatu ${workshopId}`);
+    return newOrder;
+
+  } catch (err) {
+    console.error('[DB ERROR] Create order:', err.message);
+    throw new Error('Nie udało się utworzyć zamówienia');
+  }
 }

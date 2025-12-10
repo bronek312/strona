@@ -1,20 +1,31 @@
 const API_URL = 'http://localhost:4000/api';
 
-export function getToken() {
-    return localStorage.getItem('token') || sessionStorage.getItem('token');
-}
-
 export const api = {
-    get: async (end) => { 
-        const r = await fetch(`${API_URL}${end}`, { headers: {'Authorization': `Bearer ${getToken()}`} }); 
-        if(!r.ok) throw await r.json(); return r.json(); 
+    async get(endpoint) {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`${API_URL}${endpoint}`, {
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        if (res.status === 401 || res.status === 403) {
+            window.location.href = '/login.html';
+            throw new Error('Brak dostępu');
+        }
+        return res.json();
     },
-    post: async (end, d) => { 
-        const r = await fetch(`${API_URL}${end}`, { method:'POST', headers:{'Content-Type':'application/json', 'Authorization': `Bearer ${getToken()}`}, body:JSON.stringify(d)}); 
-        if(!r.ok) throw await r.json(); return r.json(); 
-    },
-    patch: async (end, d) => { 
-        const r = await fetch(`${API_URL}${end}`, { method:'PATCH', headers:{'Content-Type':'application/json', 'Authorization': `Bearer ${getToken()}`}, body:JSON.stringify(d)}); 
-        if(!r.ok) throw await r.json(); return r.json(); 
+
+    async post(endpoint, data) {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`${API_URL}${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        return res.json();
     }
 };

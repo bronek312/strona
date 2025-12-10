@@ -145,4 +145,48 @@ const ensureWorkshopAdditionalColumns = () => {
 
 ensureWorkshopAdditionalColumns();
 
+// ==========================================
+// NOWE TABELE: Części i Zamówienia (Dodane przez Tech Leada)
+// ==========================================
+
+const ensurePartsTables = () => {
+  const partsMigration = `
+    CREATE TABLE IF NOT EXISTS parts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      code TEXT, -- np. numer katalogowy
+      price REAL NOT NULL,
+      stock_quantity INTEGER DEFAULT 0,
+      description TEXT
+    );
+
+    CREATE TABLE IF NOT EXISTS orders (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      workshop_id INTEGER NOT NULL,
+      part_name TEXT NOT NULL,
+      part_index TEXT,
+      price REAL,
+      quantity INTEGER DEFAULT 1,
+      status TEXT DEFAULT 'new', -- new, pending, completed, cancelled
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (workshop_id) REFERENCES workshops(id)
+    );
+  `;
+  db.exec(partsMigration);
+
+  // Dodajmy przykładowe dane, jeśli tabela części jest pusta (Seed)
+  const count = db.prepare('SELECT count(*) as count FROM parts').get();
+  if (count.count === 0) {
+    console.log('Seedowanie tabeli parts...');
+    const insert = db.prepare('INSERT INTO parts (name, code, price, stock_quantity) VALUES (?, ?, ?, ?)');
+    insert.run('Klocki hamulcowe przód (TRW)', 'GDB1307', 145.00, 10);
+    insert.run('Filtr oleju (Mann)', 'W712/95', 35.50, 50);
+    insert.run('Amortyzator tył (Sachs)', '313 000', 210.00, 4);
+    insert.run('Wycieraczki Bosch Aerotwin', '3 397 007', 95.00, 20);
+    insert.run('Zestaw paska rozrządu', 'CT1139K2', 450.00, 2);
+  }
+};
+
+ensurePartsTables();
+
 export { db };
